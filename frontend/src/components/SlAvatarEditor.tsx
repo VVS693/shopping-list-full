@@ -34,7 +34,6 @@ export function SlAvatarEditor({
       const formData = new FormData();
       formData.append("image", blob, `${Date.now()}.jpg`);
       onEditAvatar(formData);
-      return formData;
     }
   };
 
@@ -65,7 +64,7 @@ export function SlAvatarEditor({
         height={260}
         borderRadius={130}
         border={30}
-        color={[255, 255, 255, 0.7]} // RGBA
+        color={[255, 255, 255, 0.7]}
         scale={typeof zoomValue === "number" ? (zoomValue + 100) / 100 : 1.2}
         rotate={typeof rotatuonValue === "number" ? rotatuonValue : 0}
       />
