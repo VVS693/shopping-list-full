@@ -1,0 +1,69 @@
+import { fetchAllSortedItems } from "./actionsCreators";
+import { IShopItem } from "./../../types";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+interface ItemsState {
+  items: IShopItem[];
+  isLoading: boolean;
+  error: string;
+}
+
+const initialState: ItemsState = {
+  items: [],
+  isLoading: false,
+  error: "",
+};
+
+export const itemsSlice = createSlice({
+  name: "items",
+  initialState,
+  reducers: {
+    deleteItemArray(state, action: PayloadAction<IShopItem>) {
+      state.items = state.items.filter((el) => el.id !== action.payload.id);
+    },
+
+    editItemArray(state, action: PayloadAction<IShopItem>) {
+      state.items.map((el) => {
+        if (el.id === action.payload.id) {
+          el.completed = action.payload.completed;
+          el.title = action.payload.title;
+        }
+      });
+    },
+    addItemArray(state, action: PayloadAction<IShopItem>) {
+        state.items.push(action.payload)
+      },
+    sortItemsArray(state) {
+      state.items = state.items.sort((a, b) => {
+        if (a.completed < b.completed) return -1;
+        return 0;
+      });
+    },
+  },
+
+  extraReducers(builder) {
+    builder
+      .addCase(fetchAllSortedItems.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(
+        fetchAllSortedItems.fulfilled,
+        (state, action: PayloadAction<IShopItem[]>) => {
+          state.isLoading = false;
+          state.error = "";
+          state.items = action.payload;
+        }
+      )
+      .addCase(
+        fetchAllSortedItems.rejected,
+        (state, action: PayloadAction<any>) => {
+          state.isLoading = false;
+          state.error = action.payload;
+        }
+      );
+  },
+});
+
+export const { deleteItemArray, sortItemsArray, editItemArray, addItemArray } = itemsSlice.actions;
+
+export default itemsSlice.reducer;
