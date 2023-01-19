@@ -3,12 +3,23 @@
 import express from "express"
 import path from "path"
 import multer from "multer"
+import mongoose from "mongoose";
 import cors from "cors"
+import * as UserController from "./controllers/UserController.js"
+import checkAuth from "./utils/checkAuth.js";
 
 
 const PORT = process.env.PORT || 3001;
-const __dirname = path.resolve()
+export const __dirname = path.resolve()
+
 // console.log(__dirname)
+// console.log(path.resolve(__dirname, 'avatars'))
+
+mongoose.set("strictQuery", false)
+mongoose
+    .connect("mongodb+srv://vvs694:vvs694@cluster0.wqbcv20.mongodb.net/sl?retryWrites=true&w=majority")
+    .then(() => console.log("ShoppingList database OK!"))
+    .catch((err) => console.log("Database error", err))
 
 const app = express();
 
@@ -29,19 +40,31 @@ const storage = multer.diskStorage({
 const upload = multer({ storage })
 
 app.use(express.json())
-app.use("/avatars", express.static(path.resolve(__dirname, 'avatars')))
+
+app.use(express.static(path.resolve(__dirname, 'avatars')))
+app.use(express.static(path.resolve(__dirname, 'avatars/default')))
 
 app.use(express.static(path.resolve(__dirname, '../frontend/build')))
 
+app.post("/auth/login", UserController.login)
+app.post("/auth/register", UserController.register)
+app.get("/auth/me", checkAuth, UserController.getMe)
+
+app.patch("/auth/update", checkAuth, UserController.update)
+app.patch("/auth/password", checkAuth, UserController.updatePassword)
+
+
+app.post("/avatars/", checkAuth, upload.single("image"), (req, res) => {
+  res.json({
+    url: req.file.originalname,
+    text: "File uploaded successfully"
+  })
+})
+app.delete("/avatars/:avatar", checkAuth, UserController.delOldAvatarImage)
+
+
 app.get('/*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../frontend/build', 'index.html'));
-})
-
-app.post("/avatars", upload.single("image"), (req, res) => {
-  res.json({
-    url: `/avatars/${req.file.originalname}`,
-    text: "OKKK!!!"
-  })
 })
 
 app.listen(PORT, () => {

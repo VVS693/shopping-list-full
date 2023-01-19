@@ -9,16 +9,21 @@ import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import {
   fetchAddItems,
   fetchAllSortedItems,
-} from "../store/reducers/actionsCreators";
+} from "../store/reducers/actionsItemsCreators";
 import { addItemArray, sortItemsArray } from "../store/reducers/itemsSlice";
 import { Header } from "../components/Header";
 import { animateScroll } from "react-scroll";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export function Home() {
   const dispatch = useAppDispatch();
   const { items, isLoading, error } = useAppSelector(
     (state) => state.itemsReducer
   );
+
+  const { user } = useAppSelector((state) => state.userReducer);
+
+  const { isAuth } = useAppSelector((state) => state.userReducer);
 
   const onSortHandler = () => {
     animateScroll.scrollToTop({
@@ -43,9 +48,22 @@ export function Home() {
     dispatch(fetchAddItems(itemData));
   };
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     dispatch(fetchAllSortedItems());
   }, []);
+
+  // if (!isAuth) {
+  //   return <Navigate to="/login" />;
+  // }
+
+ 
+  // useEffect(() => {
+  //   if (!isAuth) {
+  //     navigate("/login");
+  //   }
+  // }, [isAuth]);
 
   return (
     <div className="container mx-auto max-w-sm pb-20">

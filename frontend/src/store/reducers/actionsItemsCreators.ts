@@ -1,6 +1,6 @@
-import { client, clientUser } from "./../../App";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { IAvatarServerResponse, IShopItem, IUser } from "../../types";
+import { IShopItem } from "../../types";
+import { client } from "../axios";
 
 export const fetchAllSortedItems = createAsyncThunk(
   "items/fetchAll",
@@ -25,7 +25,7 @@ export const fetchDeleteItems = createAsyncThunk(
       await client.delete<IShopItem>(`/${item.id}`);
       return item;
     } catch (err) {
-      return thunkAPI.rejectWithValue("Error delete...");
+      return thunkAPI.rejectWithValue("Error delete item...");
     }
   }
 );
@@ -37,7 +37,7 @@ export const fetchEditItems = createAsyncThunk(
       await client.put<IShopItem>(`/${item.id}`, item);
       return item;
     } catch (err) {
-      return thunkAPI.rejectWithValue("Error edit...");
+      return thunkAPI.rejectWithValue("Error edit item...");
     }
   }
 );
@@ -49,23 +49,7 @@ export const fetchAddItems = createAsyncThunk(
       await client.post<IShopItem>("", item);
       return item;
     } catch (err) {
-      return thunkAPI.rejectWithValue("Error add...");
-    }
-  }
-);
-
-export const fetchNewUserAvatar = createAsyncThunk(
-  "uploadUserAvatar",
-  async (data: FormData, thunkAPI) => {
-    try {
-      const response = await clientUser.post<IAvatarServerResponse>("", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      return response.data;
-    } catch (err) {
-      return thunkAPI.rejectWithValue("Error loading...");
+      return thunkAPI.rejectWithValue("Error add item...");
     }
   }
 );

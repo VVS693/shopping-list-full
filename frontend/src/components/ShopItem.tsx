@@ -3,7 +3,7 @@ import { useAppDispatch } from "../hooks/redux";
 import {
   fetchDeleteItems,
   fetchEditItems,
-} from "../store/reducers/actionsCreators";
+} from "../store/reducers/actionsItemsCreators";
 import { deleteItemArray, editItemArray } from "../store/reducers/itemsSlice";
 import { IShopItem } from "../types";
 import { CheckBox } from "./Checkbox";

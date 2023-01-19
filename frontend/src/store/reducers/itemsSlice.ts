@@ -1,4 +1,8 @@
-import { fetchAllSortedItems } from "./actionsCreators";
+import {
+  fetchAddItems,
+  fetchAllSortedItems,
+  fetchEditItems,
+} from "./actionsItemsCreators";
 import { IShopItem } from "./../../types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
@@ -30,9 +34,11 @@ export const itemsSlice = createSlice({
         }
       });
     },
+
     addItemArray(state, action: PayloadAction<IShopItem>) {
-        state.items.push(action.payload)
-      },
+      state.items.push(action.payload);
+    },
+
     sortItemsArray(state) {
       state.items = state.items.sort((a, b) => {
         if (a.completed < b.completed) return -1;
@@ -46,24 +52,19 @@ export const itemsSlice = createSlice({
       .addCase(fetchAllSortedItems.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(
-        fetchAllSortedItems.fulfilled,
-        (state, action: PayloadAction<IShopItem[]>) => {
-          state.isLoading = false;
-          state.error = "";
-          state.items = action.payload;
-        }
-      )
-      .addCase(
-        fetchAllSortedItems.rejected,
-        (state, action: PayloadAction<any>) => {
-          state.isLoading = false;
-          state.error = action.payload;
-        }
-      );
+      .addCase(fetchAllSortedItems.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = "";
+        state.items = action.payload;
+      })
+      .addCase(fetchAllSortedItems.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      });
   },
 });
 
-export const { deleteItemArray, sortItemsArray, editItemArray, addItemArray } = itemsSlice.actions;
+export const { deleteItemArray, sortItemsArray, editItemArray, addItemArray } =
+  itemsSlice.actions;
 
 export default itemsSlice.reducer;

@@ -1,12 +1,18 @@
-import { Avatar, Button, Input } from "@material-tailwind/react";
+import { Button, Input } from "@material-tailwind/react";
+import Avatar from "@mui/material/Avatar";
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { SlAvatarEditor } from "../components/SlAvatarEditor";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
-import { fetchNewUserAvatar } from "../store/reducers/actionsCreators";
-import { changeUserInfo } from "../store/reducers/usersSlice";
-import { eyeIcon, eyeSlashIcon } from "./Login";
+import { defaultAvatarImage } from "../store/reducers/usersSlice";
+import { eyeIcon, eyeSlashIcon } from "../components/icons";
+import {
+  delOldUserAvatar,
+  fetchNewUserAvatar,
+  fetchUserNewPassword,
+  fetchUserUpdate,
+} from "../store/reducers/actionUserCreators";
 
 interface IAccountInput {
   newUserName: string;
@@ -40,38 +46,48 @@ export function UserAccount() {
 
   const editAvatarHandler = async (data: FormData) => {
     try {
+      await dispatch(delOldUserAvatar(user.avatar));
+
       const res = await dispatch(fetchNewUserAvatar(data)).unwrap();
-      dispatch(
-        changeUserInfo({
-          id: user.id,
-          name: user.name,
-          password: user.password,
-          avatar: res.url,
-        })
-      );
+
+      const newUserData = {
+        _id: user._id,
+        name: user.name,
+        avatar: res.url,
+      };
+      dispatch(fetchUserUpdate(newUserData));
     } catch (err) {
       console.log(err);
     }
     setEditAvatar(false);
-    setEditAccount(false);
-    reset();
   };
 
   const onSubmit: SubmitHandler<IAccountInput> = (data) => {
-    console.log(data);
-
-    if (dirtyFields.newUserName) {
-      dispatch(
-        changeUserInfo({
-          id: user.id,
-          name: data.newUserName,
-          password: user.password,
-          avatar: user.avatar,
-        })
-      );
+    if (
+      dirtyFields.newUserName &&
+      !dirtyFields.currentPassword &&
+      !dirtyFields.newPassword
+    ) {
+      const newUserData = {
+        _id: user._id,
+        name: data.newUserName,
+        avatar: user.avatar,
+      };
+      dispatch(fetchUserUpdate(newUserData));
     }
+
+    if (dirtyFields.currentPassword && dirtyFields.newPassword) {
+      const newUserData = {
+        _id: user._id,
+        name: dirtyFields.newUserName ? data.newUserName : "",
+        avatar: user.avatar,
+        currentPassword: data.currentPassword,
+        newPassword: data.newPassword,
+      };
+      dispatch(fetchUserNewPassword(newUserData));
+    }
+
     setEditAccount(false);
-    setEditAvatar(false);
     setShowCurrentPassword(false);
     setShowNewPassword(false);
     reset();
@@ -81,36 +97,40 @@ export function UserAccount() {
     setEditAccount(false);
     setShowCurrentPassword(false);
     setShowNewPassword(false);
-    setEditAvatar(false);
     reset();
   };
 
   return (
     <div className="container mx-auto max-w-sm flex flex-wrap justify-center pt-10">
-      <div className=" text-center">
+      <div className="text-center">
         {!editAvatar ? (
-          <>
+          <div className="flex flex-col items-center " >
+
             <Avatar
-              className={editAccount ? "cursor-pointer mb-3 mt-3" : "mb-3 mt-3"}
               src={user.avatar}
-              // alt="USER"
-              variant="circular"
-              size="xxl"
+              sx={{ cursor: (editAccount ? "pointer" : ""), width: 240, height: 240, mb: 2, mt: 2 }}
+              onError={() => {
+                dispatch(
+                  defaultAvatarImage({
+                    avatar: "default_ava.png",
+                  })
+                );
+              }}
               onClick={() => {
                 if (editAccount) {
                   setEditAvatar(true);
                 }
               }}
             />
+
             <h2 className="pt-3 pb-3 text-center text-3xl font-medium text-gray-900">
               {user.name}
             </h2>
-          </>
+          </div>
         ) : (
           <SlAvatarEditor
-            imageUrl={user.avatar}
             onEditAvatar={editAvatarHandler}
-            onCancelAvatar={cancelHandler}
+            onCancelAvatar={() => setEditAvatar(false)}
           />
         )}
       </div>

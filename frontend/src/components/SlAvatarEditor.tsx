@@ -2,23 +2,24 @@ import AvatarEditor from "react-avatar-editor";
 import Slider from "@mui/material/Slider";
 import React, { useRef, useState } from "react";
 import { Button } from "@material-tailwind/react";
+import { useAppSelector } from "../hooks/redux";
 
 interface SlAvatarEditorProps {
-  imageUrl: string;
   onEditAvatar: (data: FormData) => void;
   onCancelAvatar: () => void;
 }
 
 export function SlAvatarEditor({
-  imageUrl,
   onEditAvatar,
   onCancelAvatar,
 }: SlAvatarEditorProps) {
+  const { user } = useAppSelector((state) => state.userReducer);
   const [zoomValue, setZoomValue] = useState<number | number[]>(20);
   const [rotatuonValue, setRotationValue] = useState<number | number[]>(0);
-  const [newImage, setNewImage] = useState<string | File>(imageUrl);
+  const [newImage, setNewImage] = useState<string | File >(user.avatar);
 
   const editor = useRef<AvatarEditor>(null);
+
   const onSaveAvatarHandler = async () => {
     if (editor.current) {
       // This returns a HTMLCanvasElement, it can be made into a data URL or a blob,
@@ -56,18 +57,20 @@ export function SlAvatarEditor({
   };
 
   return (
-    <div>
-      <AvatarEditor
-        ref={editor}
-        image={newImage}
-        width={260}
-        height={260}
-        borderRadius={130}
-        border={30}
-        color={[255, 255, 255, 0.7]}
-        scale={typeof zoomValue === "number" ? (zoomValue + 100) / 100 : 1.2}
-        rotate={typeof rotatuonValue === "number" ? rotatuonValue : 0}
-      />
+    <div className="w-80">
+      <div className="flex justify-center">
+        <AvatarEditor
+          ref={editor}
+          image={newImage}
+          width={260}
+          height={260}
+          borderRadius={130}
+          border={30}
+          color={[255, 255, 255, 0.7]}
+          scale={typeof zoomValue === "number" ? (zoomValue + 100) / 100 : 1.2}
+          rotate={typeof rotatuonValue === "number" ? rotatuonValue : 0}
+        />
+      </div>
 
       <Button
         onClick={handleUploadClick}
@@ -85,8 +88,8 @@ export function SlAvatarEditor({
         />
       </Button>
 
-      <div className="pt-6 pb-3">
-        <span className=" text-blue-500 text-xl">{`Zoom: ${zoomValue}%`}</span>
+      <div className="pt-6 pb-3 text-left">
+        <span className="text-blue-500 text-xl">{`Zoom: ${zoomValue}%`}</span>
         <Slider
           size="medium"
           sx={{
@@ -101,7 +104,7 @@ export function SlAvatarEditor({
           valueLabelDisplay="auto"
         />
       </div>
-      <div className="pt-3 pb-3">
+      <div className="pt-3 pb-3 text-left">
         <span className=" text-blue-500 text-xl">{`Rotation: ${rotatuonValue}°`}</span>
         <Slider
           size="medium"
