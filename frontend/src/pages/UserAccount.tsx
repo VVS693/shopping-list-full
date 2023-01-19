@@ -11,7 +11,8 @@ import {
   delOldUserAvatar,
   fetchNewUserAvatar,
   fetchUserNewPassword,
-  fetchUserUpdate,
+  fetchUserUpdateAvatar,
+  fetchUserUpdateName,
 } from "../store/reducers/actionUserCreators";
 
 interface IAccountInput {
@@ -52,10 +53,9 @@ export function UserAccount() {
 
       const newUserData = {
         _id: user._id,
-        name: user.name,
         avatar: res.url,
       };
-      dispatch(fetchUserUpdate(newUserData));
+      dispatch(fetchUserUpdateAvatar(newUserData));
     } catch (err) {
       console.log(err);
     }
@@ -71,9 +71,8 @@ export function UserAccount() {
       const newUserData = {
         _id: user._id,
         name: data.newUserName,
-        avatar: user.avatar,
       };
-      dispatch(fetchUserUpdate(newUserData));
+      dispatch(fetchUserUpdateName(newUserData));
     }
 
     if (dirtyFields.currentPassword && dirtyFields.newPassword) {
@@ -104,11 +103,16 @@ export function UserAccount() {
     <div className="container mx-auto max-w-sm flex flex-wrap justify-center pt-10">
       <div className="text-center">
         {!editAvatar ? (
-          <div className="flex flex-col items-center " >
-
+          <div className="flex flex-col items-center ">
             <Avatar
               src={user.avatar}
-              sx={{ cursor: (editAccount ? "pointer" : ""), width: 240, height: 240, mb: 2, mt: 2 }}
+              sx={{
+                cursor: editAccount ? "pointer" : "",
+                width: 240,
+                height: 240,
+                mb: 2,
+                mt: 2,
+              }}
               onError={() => {
                 dispatch(
                   defaultAvatarImage({

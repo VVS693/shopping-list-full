@@ -10,6 +10,16 @@ export interface IUser {
   avatar: string;
 }
 
+export interface IUserName {
+  _id: string;
+  name: string;
+}
+
+export interface IUserAvatar {
+  _id: string;
+  avatar: string;
+}
+
 export interface IAvatarServerResponse {
   url: string;
   text: string;

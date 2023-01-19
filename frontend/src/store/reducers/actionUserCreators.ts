@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { IAvatarServerResponse, IUser, IUserLogin, IUserLoginResponse, IUserNewPassword } from "../../types";
+import { IAvatarServerResponse, IUser, IUserAvatar, IUserLogin, IUserLoginResponse, IUserName, IUserNewPassword } from "../../types";
 import { clientDatabase } from "../axios";
 
 export const fetchUserLogin = createAsyncThunk(
@@ -27,7 +27,7 @@ export const fetchUserMe = createAsyncThunk(
 );
 
 export const fetchNewUserAvatar = createAsyncThunk(
-  "uploadUserAvatar",
+  "fetchNewUserAvatar",
   async (data: FormData, thunkAPI) => {
     try {
       const response = await clientDatabase.post<IAvatarServerResponse>(
@@ -61,17 +61,30 @@ export const delOldUserAvatar = createAsyncThunk(
   }
 );
 
-export const fetchUserUpdate = createAsyncThunk(
-  "fetchUserData",
-  async (userData: IUser, thunkAPI) => {
+export const fetchUserUpdateName = createAsyncThunk(
+  "fetchUserUpdateName",
+  async (userData: IUserName, thunkAPI) => {
     try {
-      await clientDatabase.patch("/auth/update", userData);
+      await clientDatabase.patch("/auth/update/name", userData);
       return userData;
     } catch (err) {
-      return thunkAPI.rejectWithValue("Error update user data...");
+      return thunkAPI.rejectWithValue("Error update user name...");
     }
   }
 );
+
+export const fetchUserUpdateAvatar = createAsyncThunk(
+  "fetchUserUpdateAvatar",
+  async (userData: IUserAvatar, thunkAPI) => {
+    try {
+      await clientDatabase.patch("/auth/update/avatar", userData);
+      return userData;
+    } catch (err) {
+      return thunkAPI.rejectWithValue("Error update user avatar...");
+    }
+  }
+);
+
 
 export const fetchUserNewPassword = createAsyncThunk(
   "fetchUserNewPassword",

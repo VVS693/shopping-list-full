@@ -5,6 +5,23 @@ import { unlink } from "node:fs/promises";
 import { __dirname } from "../index.js";
 import UserModel from "../models/User.js";
 
+import { secretWord } from "../config/config.js";
+
+export const uploadAvatarImage = async (req, res) => {
+  try {
+    console.log("File uploaded successfully");
+    res.json({
+      url: req.file.originalname,
+      text: "File uploaded successfully",
+    });
+  } catch (error) {
+    console.error("there was an error: ", error.message);
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 export const delOldAvatarImage = async (req, res) => {
   try {
     await unlink(`${__dirname}/avatars/${req.params.avatar}`);
@@ -38,7 +55,7 @@ export const register = async (req, res) => {
       {
         _id: user._id,
       },
-      "shopping",
+      secretWord,
       {
         expiresIn: "30d",
       }
@@ -81,7 +98,7 @@ export const login = async (req, res) => {
       {
         _id: user._id,
       },
-      "shopping",
+      secretWord,
       {
         expiresIn: "30d",
       }
@@ -102,7 +119,6 @@ export const login = async (req, res) => {
 
 export const getMe = async (req, res) => {
   try {
-    // console.log(req.userId)
     const user = await UserModel.findById(req.userId);
     if (!user) {
       return res.status(404).json({
@@ -120,7 +136,7 @@ export const getMe = async (req, res) => {
   }
 };
 
-export const update = async (req, res) => {
+export const updateUserName = async (req, res) => {
   try {
     const user = await UserModel.findOne({ name: req.body.name });
     if (!user) {
@@ -130,7 +146,6 @@ export const update = async (req, res) => {
         },
         {
           name: req.body.name,
-          avatar: req.body.avatar,
         }
       );
       res.json({
@@ -144,7 +159,28 @@ export const update = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      message: "Failed to update user data!",
+      message: "Failed to update user name!",
+    });
+  }
+};
+
+export const updateUserAvatar = async (req, res) => {
+  try {
+    await UserModel.updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        avatar: req.body.avatar,
+      }
+    );
+    res.json({
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Failed to update user avatar!",
     });
   }
 };
@@ -152,7 +188,6 @@ export const update = async (req, res) => {
 export const updatePassword = async (req, res) => {
   try {
     const user = await UserModel.findOne({ _id: req.body._id });
-    // console.log(user._doc.passwordHash);
 
     if (req.body.newPassword) {
       const isValidPass = await bcrypt.compare(
@@ -168,9 +203,12 @@ export const updatePassword = async (req, res) => {
 
       if (req.body.name !== "") {
         const user = await UserModel.findOne({ name: req.body.name });
-        if (user) {
+        const userMe = await UserModel.findOne({ _id: req.body._id });
+
+        if (user && !(user._doc.name === userMe._doc.name)) {
           return res.status(404).json({
             message: "This name is already taken",
+            fff: user._doc._id,
           });
         }
         await UserModel.updateOne(

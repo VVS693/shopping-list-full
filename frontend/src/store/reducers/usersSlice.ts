@@ -1,10 +1,11 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { IUser } from "../../types";
 import {
   fetchUserLogin,
   fetchUserMe,
   fetchUserNewPassword,
-  fetchUserUpdate,
+  fetchUserUpdateAvatar,
+  fetchUserUpdateName,
 } from "./actionUserCreators";
 
 interface UserState {
@@ -62,15 +63,28 @@ export const usersSlice = createSlice({
         state.isAuth = false;
       })
 
-      .addCase(fetchUserUpdate.pending, (state) => {
+      .addCase(fetchUserUpdateName.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(fetchUserUpdate.fulfilled, (state, action) => {
+      .addCase(fetchUserUpdateName.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = "";
-        state.user = action.payload;
+        state.user.name = action.payload.name
       })
-      .addCase(fetchUserUpdate.rejected, (state, action) => {
+      .addCase(fetchUserUpdateName.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+
+      .addCase(fetchUserUpdateAvatar.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchUserUpdateAvatar.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = "";
+        state.user.avatar = action.payload.avatar
+      })
+      .addCase(fetchUserUpdateAvatar.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
       })
@@ -82,13 +96,13 @@ export const usersSlice = createSlice({
         state.isLoading = false;
         state.error = "";
         state.user = action.payload;
-        window.localStorage.removeItem("token")
+        window.localStorage.removeItem("token");
         state.isAuth = false;
       })
       .addCase(fetchUserNewPassword.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload as string;
-      })
+      });
   },
 });
 
