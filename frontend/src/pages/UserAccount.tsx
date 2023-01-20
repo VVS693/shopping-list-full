@@ -5,7 +5,10 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { SlAvatarEditor } from "../components/SlAvatarEditor";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
-import { defaultAvatarImage } from "../store/reducers/usersSlice";
+import {
+  alerDialogOpen,
+  defaultAvatarImage,
+} from "../store/reducers/usersSlice";
 import { eyeIcon, eyeSlashIcon } from "../components/icons";
 import {
   delOldUserAvatar,
@@ -14,6 +17,7 @@ import {
   fetchUserUpdateAvatar,
   fetchUserUpdateName,
 } from "../store/reducers/actionUserCreators";
+import { AlertDialog } from "../components/AlertDialog";
 
 interface IAccountInput {
   newUserName: string;
@@ -42,6 +46,7 @@ export function UserAccount() {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [editAvatar, setEditAvatar] = useState(false);
+  const [dataForm, setDataForm] = useState<IAccountInput>();
 
   const navigate = useNavigate();
 
@@ -62,26 +67,38 @@ export function UserAccount() {
     setEditAvatar(false);
   };
 
-  const onSubmit: SubmitHandler<IAccountInput> = (data) => {
+  const userApproveModalOpen = (data: IAccountInput) => {
+    setDataForm(data);
+    const alertData = {
+      isAlertDialogOpen: true,
+      alertDialogText: "Are you sure you want to change user's data?",
+    };
+    dispatch(alerDialogOpen(alertData));
+  };
+
+  // const onSubmit: SubmitHandler<IAccountInput> = (data) => {
+
+  const onSubmit = () => {
     if (
+      dataForm &&
       dirtyFields.newUserName &&
       !dirtyFields.currentPassword &&
       !dirtyFields.newPassword
     ) {
       const newUserData = {
         _id: user._id,
-        name: data.newUserName,
+        name: dataForm.newUserName,
       };
       dispatch(fetchUserUpdateName(newUserData));
     }
 
-    if (dirtyFields.currentPassword && dirtyFields.newPassword) {
+    if (dataForm && dirtyFields.currentPassword && dirtyFields.newPassword) {
       const newUserData = {
         _id: user._id,
-        name: dirtyFields.newUserName ? data.newUserName : "",
+        name: dirtyFields.newUserName ? dataForm.newUserName : "",
         avatar: user.avatar,
-        currentPassword: data.currentPassword,
-        newPassword: data.newPassword,
+        currentPassword: dataForm.currentPassword,
+        newPassword: dataForm.newPassword,
       };
       dispatch(fetchUserNewPassword(newUserData));
     }
@@ -101,6 +118,7 @@ export function UserAccount() {
 
   return (
     <div className="container mx-auto max-w-sm flex flex-wrap justify-center pt-10">
+      <AlertDialog okFunc={onSubmit} cancelFunc={cancelHandler} />
       <div className="text-center">
         {!editAvatar ? (
           <div className="flex flex-col items-center ">
@@ -158,7 +176,7 @@ export function UserAccount() {
         </div>
       )}
       {editAccount && (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(userApproveModalOpen)}>
           {!editAvatar && (
             <>
               <div>

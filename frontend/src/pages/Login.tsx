@@ -1,9 +1,11 @@
 import { Button, Input } from "@material-tailwind/react";
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { AlertDialog } from "../components/AlertDialog";
 import { eyeIcon, eyeSlashIcon } from "../components/icons";
 import { useAppDispatch } from "../hooks/redux";
 import { fetchUserLogin } from "../store/reducers/actionUserCreators";
+import { alerDialogOpen } from "../store/reducers/usersSlice";
 
 interface ILoginInput {
   name: string;
@@ -27,9 +29,12 @@ export function Login() {
         window.localStorage.setItem("token", dataUser.token);
       }
     } catch (error) {
-      alert("Login or password is incorrect");
+      const alertData = {
+        isAlertDialogOpen: true,
+        alertDialogText: "Login or password is incorrect...",
+      };
+      dispatch(alerDialogOpen(alertData));
     }
-    reset();
   };
 
   const [showPassword, setShowPassword] = useState(false);
@@ -49,9 +54,7 @@ export function Login() {
             })}
           />
           {errors.name ? (
-            <p className=" pt-1 text-xs text-red-900">
-              {errors.name.message}
-            </p>
+            <p className=" pt-1 text-xs text-red-900">{errors.name.message}</p>
           ) : (
             <div className=" block h-5"></div>
           )}
@@ -84,6 +87,8 @@ export function Login() {
           </Button>
         </div>
       </form>
+
+      <AlertDialog okFunc={() => reset()} />
     </div>
   );
 }

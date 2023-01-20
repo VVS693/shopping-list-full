@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IUser } from "../../types";
 import {
   fetchUserLogin,
@@ -13,6 +13,8 @@ interface UserState {
   isLoading: boolean;
   error: string;
   isAuth: boolean;
+  isAlertDialogOpen: boolean;
+  alertDialogText: string;
 }
 
 const initialState: UserState = {
@@ -20,14 +22,27 @@ const initialState: UserState = {
   isLoading: false,
   error: "",
   isAuth: false,
+  isAlertDialogOpen: false,
+  alertDialogText: "",
 };
 
 export const usersSlice = createSlice({
   name: "users",
   initialState,
   reducers: {
-    defaultAvatarImage(state, action) {
+    defaultAvatarImage(state, action: PayloadAction<{ avatar: string }>) {
       state.user.avatar = action.payload.avatar;
+    },
+
+    alerDialogOpen(
+      state,
+      action: PayloadAction<{
+        isAlertDialogOpen: boolean;
+        alertDialogText: string;
+      }>
+    ) {
+      state.isAlertDialogOpen = action.payload.isAlertDialogOpen;
+      state.alertDialogText = action.payload.alertDialogText;
     },
   },
 
@@ -69,7 +84,7 @@ export const usersSlice = createSlice({
       .addCase(fetchUserUpdateName.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = "";
-        state.user.name = action.payload.name
+        state.user.name = action.payload.name;
       })
       .addCase(fetchUserUpdateName.rejected, (state, action) => {
         state.isLoading = false;
@@ -82,7 +97,7 @@ export const usersSlice = createSlice({
       .addCase(fetchUserUpdateAvatar.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = "";
-        state.user.avatar = action.payload.avatar
+        state.user.avatar = action.payload.avatar;
       })
       .addCase(fetchUserUpdateAvatar.rejected, (state, action) => {
         state.isLoading = false;
@@ -106,6 +121,6 @@ export const usersSlice = createSlice({
   },
 });
 
-export const { defaultAvatarImage } = usersSlice.actions;
+export const { defaultAvatarImage, alerDialogOpen } = usersSlice.actions;
 
 export default usersSlice.reducer;

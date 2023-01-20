@@ -6,6 +6,7 @@ import multer from "multer";
 import mongoose from "mongoose";
 import cors from "cors";
 import * as UserController from "./controllers/UserController.js";
+import * as ItemController from "./controllers/ItemController.js";
 import checkAuth from "./middlewares/checkAuth.js";
 
 const PORT = process.env.PORT || 3001;
@@ -58,6 +59,15 @@ app.post(
   UserController.uploadAvatarImage
 );
 app.delete("/avatars/:avatar", checkAuth, UserController.delOldAvatarImage);
+
+
+app.get("/items", ItemController.getAllItems)
+app.post("/items", checkAuth, ItemController.createItem)
+app.delete("/items/:id", checkAuth, ItemController.removeItem)
+app.patch("/items/:id", checkAuth, ItemController.updateItem)
+
+
+
 
 app.get("/*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "../frontend/build", "index.html"));

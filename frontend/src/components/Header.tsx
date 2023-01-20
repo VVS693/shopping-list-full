@@ -1,4 +1,3 @@
-// import { Avatar } from "@material-tailwind/react";
 import Avatar from "@mui/material/Avatar";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
@@ -10,6 +9,7 @@ interface HeaderProps {
 }
 
 export function Header({ isLoading }: HeaderProps) {
+
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.userReducer);

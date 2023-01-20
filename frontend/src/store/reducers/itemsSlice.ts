@@ -1,8 +1,4 @@
-import {
-  fetchAddItems,
-  fetchAllSortedItems,
-  fetchEditItems,
-} from "./actionsItemsCreators";
+import { fetchAllSortedItems } from "./actionsItemsCreators";
 import { IShopItem } from "./../../types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 

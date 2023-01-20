@@ -81,7 +81,7 @@ export const login = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({
-        message: "User not found",
+        message: "User not found...",
       });
     }
     const isValidPass = await bcrypt.compare(
@@ -91,7 +91,7 @@ export const login = async (req, res) => {
 
     if (!isValidPass) {
       return res.status(400).json({
-        message: "Login or password is incorrect",
+        message: "Login or password is incorrect...",
       });
     }
     const token = jwt.sign(
@@ -112,7 +112,7 @@ export const login = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({
-      message: "Failed to log in",
+      message: "Failed to log in...",
     });
   }
 };
@@ -122,7 +122,7 @@ export const getMe = async (req, res) => {
     const user = await UserModel.findById(req.userId);
     if (!user) {
       return res.status(404).json({
-        message: "User not found",
+        message: "User not found...",
       });
     }
     const { passwordHash, ...userData } = user._doc;
@@ -131,7 +131,7 @@ export const getMe = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({
-      message: "No access!",
+      message: "No access...",
     });
   }
 };
@@ -139,27 +139,27 @@ export const getMe = async (req, res) => {
 export const updateUserName = async (req, res) => {
   try {
     const user = await UserModel.findOne({ name: req.body.name });
-    if (!user) {
-      await UserModel.updateOne(
-        {
-          _id: req.body._id,
-        },
-        {
-          name: req.body.name,
-        }
-      );
-      res.json({
-        success: true,
-      });
-    } else {
-      res.status(404).json({
-        message: "This name is already taken",
+    const userMe = await UserModel.findOne({ _id: req.body._id });
+    if (user && !(user._doc.name === userMe._doc.name)) {
+      return res.status(404).json({
+        message: "This name is already taken...",
       });
     }
+    await UserModel.updateOne(
+      {
+        _id: req.body._id,
+      },
+      {
+        name: req.body.name,
+      }
+    );
+    res.json({
+      success: true,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      message: "Failed to update user name!",
+      message: "Failed to update user name...",
     });
   }
 };
@@ -180,7 +180,7 @@ export const updateUserAvatar = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      message: "Failed to update user avatar!",
+      message: "Failed to update user avatar...",
     });
   }
 };
@@ -197,7 +197,7 @@ export const updatePassword = async (req, res) => {
 
       if (!isValidPass) {
         return res.status(400).json({
-          message: "Current password is incorrect",
+          message: "Current password is incorrect...",
         });
       }
 
@@ -207,8 +207,7 @@ export const updatePassword = async (req, res) => {
 
         if (user && !(user._doc.name === userMe._doc.name)) {
           return res.status(404).json({
-            message: "This name is already taken",
-            fff: user._doc._id,
+            message: "This name is already taken...",
           });
         }
         await UserModel.updateOne(

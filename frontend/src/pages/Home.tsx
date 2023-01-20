@@ -14,6 +14,7 @@ import { addItemArray, sortItemsArray } from "../store/reducers/itemsSlice";
 import { Header } from "../components/Header";
 import { animateScroll } from "react-scroll";
 import { Navigate, useNavigate } from "react-router-dom";
+import { AlertDialog } from "../components/AlertDialog";
 
 export function Home() {
   const dispatch = useAppDispatch();
@@ -21,9 +22,9 @@ export function Home() {
     (state) => state.itemsReducer
   );
 
-  const { user } = useAppSelector((state) => state.userReducer);
-
-  const { isAuth } = useAppSelector((state) => state.userReducer);
+  const { user, isAuth, isAlertDialogOpen, alertDialogText } = useAppSelector(
+    (state) => state.userReducer
+  );
 
   const onSortHandler = () => {
     animateScroll.scrollToTop({
@@ -31,6 +32,7 @@ export function Home() {
       smooth: "easeInQuad",
     });
     dispatch(sortItemsArray());
+    dispatch(fetchAllSortedItems());
   };
 
   const onAddItemHandler = (value: string) => {
@@ -48,7 +50,7 @@ export function Home() {
     dispatch(fetchAddItems(itemData));
   };
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(fetchAllSortedItems());
@@ -58,7 +60,6 @@ export function Home() {
   //   return <Navigate to="/login" />;
   // }
 
- 
   // useEffect(() => {
   //   if (!isAuth) {
   //     navigate("/login");
