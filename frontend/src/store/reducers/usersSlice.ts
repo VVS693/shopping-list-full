@@ -33,17 +33,10 @@ export const usersSlice = createSlice({
     defaultAvatarImage(state, action: PayloadAction<{ avatar: string }>) {
       state.user.avatar = action.payload.avatar;
     },
-
-    alerDialogOpen(
-      state,
-      action: PayloadAction<{
-        isAlertDialogOpen: boolean;
-        alertDialogText: string;
-      }>
-    ) {
-      state.isAlertDialogOpen = action.payload.isAlertDialogOpen;
-      state.alertDialogText = action.payload.alertDialogText;
+    authReset(state) {
+      state.isAuth = false;
     },
+
   },
 
   extraReducers(builder) {
@@ -59,7 +52,7 @@ export const usersSlice = createSlice({
       })
       .addCase(fetchUserLogin.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload as string;
+        state.error = action.error.message as string;
         state.isAuth = false;
       })
 
@@ -74,7 +67,7 @@ export const usersSlice = createSlice({
       })
       .addCase(fetchUserMe.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload as string;
+        state.error = action.error.message as string;
         state.isAuth = false;
       })
 
@@ -88,7 +81,8 @@ export const usersSlice = createSlice({
       })
       .addCase(fetchUserUpdateName.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload as string;
+        state.error = action.error.message as string;
+        // state.error = action.payload as string;
       })
 
       .addCase(fetchUserUpdateAvatar.pending, (state) => {
@@ -101,7 +95,7 @@ export const usersSlice = createSlice({
       })
       .addCase(fetchUserUpdateAvatar.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload as string;
+        state.error = action.error.message as string;
       })
 
       .addCase(fetchUserNewPassword.pending, (state) => {
@@ -110,17 +104,17 @@ export const usersSlice = createSlice({
       .addCase(fetchUserNewPassword.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = "";
-        state.user = action.payload;
-        window.localStorage.removeItem("token");
-        state.isAuth = false;
+        // state.user = action.payload;
+        // window.localStorage.removeItem("token");
+        // state.isAuth = false;
       })
       .addCase(fetchUserNewPassword.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload as string;
+        state.error = action.error.message as string;
       });
   },
 });
 
-export const { defaultAvatarImage, alerDialogOpen } = usersSlice.actions;
+export const { defaultAvatarImage, authReset } = usersSlice.actions;
 
 export default usersSlice.reducer;

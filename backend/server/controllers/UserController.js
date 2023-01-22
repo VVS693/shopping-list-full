@@ -154,7 +154,8 @@ export const updateUserName = async (req, res) => {
       }
     );
     res.json({
-      success: true,
+      _id: req.body._id,
+      name: req.body.name,
     });
   } catch (error) {
     console.log(error);

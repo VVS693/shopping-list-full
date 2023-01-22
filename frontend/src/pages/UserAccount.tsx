@@ -1,18 +1,15 @@
 import { Button, Input } from "@material-tailwind/react";
 import Avatar from "@mui/material/Avatar";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { SlAvatarEditor } from "../components/SlAvatarEditor";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
-import {
-  alerDialogOpen,
-  defaultAvatarImage,
-} from "../store/reducers/usersSlice";
+import { authReset, defaultAvatarImage } from "../store/reducers/usersSlice";
 import { eyeIcon, eyeSlashIcon } from "../components/icons";
 import {
   delOldUserAvatar,
-  fetchNewUserAvatar,
+  fetchUploadUserAvatar,
   fetchUserNewPassword,
   fetchUserUpdateAvatar,
   fetchUserUpdateName,
@@ -27,7 +24,7 @@ interface IAccountInput {
 
 export function UserAccount() {
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector((state) => state.userReducer);
+  const { user, error } = useAppSelector((state) => state.userReducer);
 
   const {
     register,
@@ -47,15 +44,17 @@ export function UserAccount() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [editAvatar, setEditAvatar] = useState(false);
   const [dataForm, setDataForm] = useState<IAccountInput>();
-
+  const [isAlertDialogApproveOpen, setAlertDialogApproveOpen] = useState(false);
+  const [isAlertDialogErrorOpen, setAlertDialogErrorOpen] = useState(false);
+  const [isAlertDialogSuccessOpen, setAlertDialogSuccessOpen] = useState(false);
+  const [alertDialogText, setalertDialogText] = useState("");
+  
   const navigate = useNavigate();
 
   const editAvatarHandler = async (data: FormData) => {
     try {
       await dispatch(delOldUserAvatar(user.avatar));
-
-      const res = await dispatch(fetchNewUserAvatar(data)).unwrap();
-
+      const res = await dispatch(fetchUploadUserAvatar(data)).unwrap();
       const newUserData = {
         _id: user._id,
         avatar: res.url,
@@ -67,18 +66,9 @@ export function UserAccount() {
     setEditAvatar(false);
   };
 
-  const userApproveModalOpen = (data: IAccountInput) => {
-    setDataForm(data);
-    const alertData = {
-      isAlertDialogOpen: true,
-      alertDialogText: "Are you sure you want to change user's data?",
-    };
-    dispatch(alerDialogOpen(alertData));
-  };
+  // const onSubmit: SubmitHandler<IAccountInput> = async (data) => {
 
-  // const onSubmit: SubmitHandler<IAccountInput> = (data) => {
-
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (
       dataForm &&
       dirtyFields.newUserName &&
@@ -89,7 +79,13 @@ export function UserAccount() {
         _id: user._id,
         name: dataForm.newUserName,
       };
-      dispatch(fetchUserUpdateName(newUserData));
+      const res = await dispatch(fetchUserUpdateName(newUserData));
+
+      if (res.meta.requestStatus === "rejected") {
+        setAlertDialogApproveOpen(false);
+        if (typeof res.payload === "string" ) {setalertDialogText(res.payload)}
+        setAlertDialogErrorOpen(true)
+      }
     }
 
     if (dataForm && dirtyFields.currentPassword && dirtyFields.newPassword) {
@@ -100,25 +96,71 @@ export function UserAccount() {
         currentPassword: dataForm.currentPassword,
         newPassword: dataForm.newPassword,
       };
-      dispatch(fetchUserNewPassword(newUserData));
-    }
+      const res = await dispatch(fetchUserNewPassword(newUserData));
 
+      if (res.meta.requestStatus === "rejected") {
+        setAlertDialogApproveOpen(false);
+        if (typeof res.payload === "string" ) {setalertDialogText(res.payload)}
+        setAlertDialogErrorOpen(true)
+      }
+
+      if (res.meta.requestStatus === "fulfilled") {
+        setAlertDialogApproveOpen(false);
+        setalertDialogText("The user's data has been successfully updated!")
+        setAlertDialogSuccessOpen(true)
+      }
+    }
     setEditAccount(false);
     setShowCurrentPassword(false);
     setShowNewPassword(false);
+    setAlertDialogApproveOpen(false);
     reset();
   };
 
   const cancelHandler = () => {
+    console.log("Cancel");
     setEditAccount(false);
     setShowCurrentPassword(false);
     setShowNewPassword(false);
+    setAlertDialogApproveOpen(false);
+    setAlertDialogErrorOpen(false)
+    setalertDialogText("");
     reset();
   };
 
+  const userApproveModalOpen = async (data: IAccountInput) => {
+    setDataForm(data);
+    setAlertDialogApproveOpen(true);
+    setalertDialogText("Are you sure you want to change user's data?");
+  };
+
+  const userApproveModalSuccess = async () => {
+    window.localStorage.removeItem("token");
+    setAlertDialogSuccessOpen(false);
+    cancelHandler()
+    dispatch(authReset())
+  };
+
+
+
   return (
     <div className="container mx-auto max-w-sm flex flex-wrap justify-center pt-10">
-      <AlertDialog okFunc={onSubmit} cancelFunc={cancelHandler} />
+      <AlertDialog
+        isOpen={isAlertDialogApproveOpen}
+        text={alertDialogText}
+        okFunc={onSubmit}
+        cancelFunc={cancelHandler}
+      />
+      <AlertDialog
+        isOpen={isAlertDialogErrorOpen}
+        text={alertDialogText}
+        cancelFunc={cancelHandler}
+      />
+      <AlertDialog
+        isOpen={isAlertDialogSuccessOpen}
+        text={alertDialogText}
+        okFunc={userApproveModalSuccess}
+      />
       <div className="text-center">
         {!editAvatar ? (
           <div className="flex flex-col items-center ">

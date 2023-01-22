@@ -1,15 +1,27 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { IAvatarServerResponse, IUser, IUserAvatar, IUserLogin, IUserLoginResponse, IUserName, IUserNewPassword } from "../../types";
+import {
+  IAvatarServerResponse,
+  IUser,
+  IUserAvatar,
+  IUserLogin,
+  IUserLoginResponse,
+  IUserName,
+  IUserNewPassword,
+} from "../../types";
 import { clientDatabase } from "../axios";
 
 export const fetchUserLogin = createAsyncThunk(
   "fetchUserLogin",
   async (authData: IUserLogin, thunkAPI) => {
     try {
-      const response = await clientDatabase.post<IUserLoginResponse>("/auth/login", authData);
+      const response = await clientDatabase.post<IUserLoginResponse>(
+        "/auth/login",
+        authData
+      );
       return response.data;
-    } catch (err) {
-      return thunkAPI.rejectWithValue("Login or password is incorrect");
+    } catch (err: any) {
+      // return thunkAPI.rejectWithValue("Login or password is incorrect);
+      return thunkAPI.rejectWithValue(err.response.data);
     }
   }
 );
@@ -26,8 +38,8 @@ export const fetchUserMe = createAsyncThunk(
   }
 );
 
-export const fetchNewUserAvatar = createAsyncThunk(
-  "fetchNewUserAvatar",
+export const fetchUploadUserAvatar = createAsyncThunk(
+  "fetchUploadUserAvatar",
   async (data: FormData, thunkAPI) => {
     try {
       const response = await clientDatabase.post<IAvatarServerResponse>(
@@ -65,10 +77,11 @@ export const fetchUserUpdateName = createAsyncThunk(
   "fetchUserUpdateName",
   async (userData: IUserName, thunkAPI) => {
     try {
-      await clientDatabase.patch("/auth/update/name", userData);
-      return userData;
-    } catch (err) {
-      return thunkAPI.rejectWithValue("Error update user name...");
+      const response = await clientDatabase.patch<IUserName>("/auth/update/name", userData);
+      return response.data;
+    } catch (err: any) {
+      // return thunkAPI.rejectWithValue("Error update user name...");
+      return thunkAPI.rejectWithValue(err.response.data.message as string);
     }
   }
 );
@@ -85,15 +98,16 @@ export const fetchUserUpdateAvatar = createAsyncThunk(
   }
 );
 
-
 export const fetchUserNewPassword = createAsyncThunk(
   "fetchUserNewPassword",
   async (userData: IUserNewPassword, thunkAPI) => {
     try {
       await clientDatabase.patch("/auth/password", userData);
-      return userData;
-    } catch (err) {
-      return thunkAPI.rejectWithValue("Error update password...");
+      // return userData;
+      return;
+    } catch (err: any) {
+      // return thunkAPI.rejectWithValue("Error update password...");
+      return thunkAPI.rejectWithValue(err.response.data.message as string);
     }
   }
 );

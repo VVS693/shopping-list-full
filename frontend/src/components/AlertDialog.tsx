@@ -2,38 +2,27 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useAppDispatch, useAppSelector } from "../hooks/redux";
-import { alerDialogOpen } from "../store/reducers/usersSlice";
 
 interface AlertDialogProps {
+  isOpen: boolean;
+  text: string;
   cancelFunc?: () => void;
   okFunc?: () => void;
 }
 
-export function AlertDialog({ cancelFunc, okFunc }: AlertDialogProps) {
-  const dispatch = useAppDispatch();
-
-  const { isAlertDialogOpen, alertDialogText } = useAppSelector(
-    (state) => state.userReducer
-  );
-
+export function AlertDialog({
+  isOpen,
+  text,
+  cancelFunc,
+  okFunc,
+}: AlertDialogProps) {
   const handleCloseOk = () => {
-    const alertData = {
-      isAlertDialogOpen: false,
-      alertDialogText: "",
-    };
-    dispatch(alerDialogOpen(alertData));
     if (okFunc) {
       okFunc();
     }
   };
 
   const handleCloseCancel = () => {
-    const alertData = {
-      isAlertDialogOpen: false,
-      alertDialogText: "",
-    };
-    dispatch(alerDialogOpen(alertData));
     if (cancelFunc) {
       cancelFunc();
     }
@@ -42,17 +31,27 @@ export function AlertDialog({ cancelFunc, okFunc }: AlertDialogProps) {
   return (
     <div>
       <Dialog
-        open={isAlertDialogOpen}
+        open={isOpen}
         onClose={handleCloseCancel}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         fullWidth={true}
       >
-        <DialogTitle id="alert-dialog-title">{alertDialogText}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{text}</DialogTitle>
         <DialogActions>
-          {cancelFunc && <Button onClick={handleCloseCancel}>Cancel</Button>}
+          {cancelFunc && (
+            <Button
+              onClick={handleCloseCancel}
+              autoFocus={!(Boolean(okFunc) && Boolean(cancelFunc)) || !Boolean(okFunc) ? true : false}
+            >
+              Cancel
+            </Button>
+          )}
           {okFunc && (
-            <Button onClick={handleCloseOk} autoFocus>
+            <Button
+              onClick={handleCloseOk}
+              autoFocus={(Boolean(okFunc) && Boolean(cancelFunc)) || !Boolean(cancelFunc) ? true : false}
+            >
               Ok
             </Button>
           )}

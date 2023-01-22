@@ -5,7 +5,6 @@ import { AlertDialog } from "../components/AlertDialog";
 import { eyeIcon, eyeSlashIcon } from "../components/icons";
 import { useAppDispatch } from "../hooks/redux";
 import { fetchUserLogin } from "../store/reducers/actionUserCreators";
-import { alerDialogOpen } from "../store/reducers/usersSlice";
 
 interface ILoginInput {
   name: string;
@@ -14,6 +13,10 @@ interface ILoginInput {
 
 export function Login() {
   const dispatch = useAppDispatch();
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [isAlertDialogOpen, setAlertDialogOpen] = useState(false);
+  const [alertDialogText, setalertDialogText] = useState("");
 
   const {
     register,
@@ -29,15 +32,14 @@ export function Login() {
         window.localStorage.setItem("token", dataUser.token);
       }
     } catch (error) {
-      const alertData = {
-        isAlertDialogOpen: true,
-        alertDialogText: "Login or password is incorrect...",
-      };
-      dispatch(alerDialogOpen(alertData));
+      setAlertDialogOpen(true);
+      setalertDialogText("Login or password is incorrect...");
     }
   };
-
-  const [showPassword, setShowPassword] = useState(false);
+  const okFuncHadler = () => {
+    setAlertDialogOpen(false);
+    reset();
+  };
 
   return (
     <div className="container mx-auto max-w-sm flex flex-wrap justify-center pt-10">
@@ -88,7 +90,11 @@ export function Login() {
         </div>
       </form>
 
-      <AlertDialog okFunc={() => reset()} />
+      <AlertDialog
+        isOpen={isAlertDialogOpen}
+        text={alertDialogText}
+        okFunc={okFuncHadler}
+      />
     </div>
   );
 }
