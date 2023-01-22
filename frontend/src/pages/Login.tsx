@@ -68,7 +68,7 @@ export function Login() {
             type={showPassword ? "text" : "password"}
             icon={
               <div onClick={() => setShowPassword(!showPassword)}>
-                {showPassword ? eyeIcon : eyeSlashIcon}
+                {!showPassword ? eyeIcon : eyeSlashIcon}
               </div>
             }
             {...register("password", {

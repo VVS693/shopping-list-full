@@ -281,7 +281,7 @@ export function UserAccount() {
                           setShowCurrentPassword(!showCurrentPassword)
                         }
                       >
-                        {showCurrentPassword ? eyeIcon : eyeSlashIcon}
+                        {!showCurrentPassword ? eyeIcon : eyeSlashIcon}
                       </div>
                     }
                     {...register("currentPassword", {
@@ -308,7 +308,7 @@ export function UserAccount() {
                     type={showNewPassword ? "text" : "password"}
                     icon={
                       <div onClick={() => setShowNewPassword(!showNewPassword)}>
-                        {showNewPassword ? eyeIcon : eyeSlashIcon}
+                        {!showNewPassword ? eyeIcon : eyeSlashIcon}
                       </div>
                     }
                     {...register("newPassword", {
