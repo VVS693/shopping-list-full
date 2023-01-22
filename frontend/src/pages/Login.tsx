@@ -42,7 +42,7 @@ export function Login() {
   };
 
   return (
-    <div className="container mx-auto max-w-sm flex flex-wrap justify-center pt-10">
+    <div className="container mx-auto max-w-sm flex flex-wrap justify-center pt-6">
       <h2 className="pt-3 pb-3 text-3xl font-medium text-gray-900">Login</h2>
 
       <form onSubmit={handleSubmit(onSubmit)}>

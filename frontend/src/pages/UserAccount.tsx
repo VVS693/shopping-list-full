@@ -1,6 +1,6 @@
 import { Button, Input } from "@material-tailwind/react";
 import Avatar from "@mui/material/Avatar";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { SlAvatarEditor } from "../components/SlAvatarEditor";
@@ -24,7 +24,7 @@ interface IAccountInput {
 
 export function UserAccount() {
   const dispatch = useAppDispatch();
-  const { user, error } = useAppSelector((state) => state.userReducer);
+  const { user } = useAppSelector((state) => state.userReducer);
 
   const {
     register,
@@ -47,8 +47,9 @@ export function UserAccount() {
   const [isAlertDialogApproveOpen, setAlertDialogApproveOpen] = useState(false);
   const [isAlertDialogErrorOpen, setAlertDialogErrorOpen] = useState(false);
   const [isAlertDialogSuccessOpen, setAlertDialogSuccessOpen] = useState(false);
+  const [isAlertDialogExitOpen, setAlertDialogExitOpen] = useState(false);
   const [alertDialogText, setalertDialogText] = useState("");
-  
+
   const navigate = useNavigate();
 
   const editAvatarHandler = async (data: FormData) => {
@@ -66,8 +67,6 @@ export function UserAccount() {
     setEditAvatar(false);
   };
 
-  // const onSubmit: SubmitHandler<IAccountInput> = async (data) => {
-
   const onSubmit = async () => {
     if (
       dataForm &&
@@ -83,8 +82,10 @@ export function UserAccount() {
 
       if (res.meta.requestStatus === "rejected") {
         setAlertDialogApproveOpen(false);
-        if (typeof res.payload === "string" ) {setalertDialogText(res.payload)}
-        setAlertDialogErrorOpen(true)
+        if (typeof res.payload === "string") {
+          setalertDialogText(res.payload);
+        }
+        setAlertDialogErrorOpen(true);
       }
     }
 
@@ -100,14 +101,16 @@ export function UserAccount() {
 
       if (res.meta.requestStatus === "rejected") {
         setAlertDialogApproveOpen(false);
-        if (typeof res.payload === "string" ) {setalertDialogText(res.payload)}
-        setAlertDialogErrorOpen(true)
+        if (typeof res.payload === "string") {
+          setalertDialogText(res.payload);
+        }
+        setAlertDialogErrorOpen(true);
       }
 
       if (res.meta.requestStatus === "fulfilled") {
         setAlertDialogApproveOpen(false);
-        setalertDialogText("The user's data has been successfully updated!")
-        setAlertDialogSuccessOpen(true)
+        setalertDialogText("The user's data has been successfully updated!");
+        setAlertDialogSuccessOpen(true);
       }
     }
     setEditAccount(false);
@@ -118,12 +121,13 @@ export function UserAccount() {
   };
 
   const cancelHandler = () => {
-    console.log("Cancel");
     setEditAccount(false);
     setShowCurrentPassword(false);
     setShowNewPassword(false);
     setAlertDialogApproveOpen(false);
-    setAlertDialogErrorOpen(false)
+    setAlertDialogErrorOpen(false);
+    setAlertDialogSuccessOpen(false);
+    setAlertDialogExitOpen(false);
     setalertDialogText("");
     reset();
   };
@@ -136,15 +140,23 @@ export function UserAccount() {
 
   const userApproveModalSuccess = async () => {
     window.localStorage.removeItem("token");
-    setAlertDialogSuccessOpen(false);
-    cancelHandler()
-    dispatch(authReset())
+    cancelHandler();
+    dispatch(authReset());
   };
 
-
+  const userExitModalOpen = async () => {
+    setAlertDialogExitOpen(true);
+    setalertDialogText("Are you sure you want to exit?");
+  };
 
   return (
-    <div className="container mx-auto max-w-sm flex flex-wrap justify-center pt-10">
+    <div className="container mx-auto max-w-sm flex flex-wrap justify-center pt-6">
+      <AlertDialog
+        isOpen={isAlertDialogExitOpen}
+        text={alertDialogText}
+        okFunc={userApproveModalSuccess}
+        cancelFunc={cancelHandler}
+      />
       <AlertDialog
         isOpen={isAlertDialogApproveOpen}
         text={alertDialogText}
@@ -161,6 +173,7 @@ export function UserAccount() {
         text={alertDialogText}
         okFunc={userApproveModalSuccess}
       />
+
       <div className="text-center">
         {!editAvatar ? (
           <div className="flex flex-col items-center ">
@@ -199,23 +212,35 @@ export function UserAccount() {
         )}
       </div>
       {!editAccount && (
-        <div className="flex justify-between w-80 pt-3 pb-3">
-          <Button
-            size="md"
-            className="w-48 tracking-wider"
-            onClick={() => setEditAccount(true)}
-          >
-            Edit profile
-          </Button>
-          <Button
-            size="md"
-            variant="outlined"
-            className="w-30 tracking-wider"
-            onClick={() => navigate("/")}
-          >
-            Cancel
-          </Button>
-        </div>
+        <>
+          <div className="flex justify-between w-80 pt-3 pb-3">
+            <Button
+              size="md"
+              className="w-48 tracking-wider"
+              onClick={() => setEditAccount(true)}
+            >
+              Edit profile
+            </Button>
+            <Button
+              size="md"
+              variant="outlined"
+              className="w-28 tracking-wider"
+              onClick={() => navigate("/")}
+            >
+              Cancel
+            </Button>
+          </div>
+          <div className="flex fixed justify-end w-80 bottom-8">
+            <Button
+              size="md"
+              variant="outlined"
+              className="w-28 tracking-wider"
+              onClick={userExitModalOpen}
+            >
+              Exit
+            </Button>
+          </div>
+        </>
       )}
       {editAccount && (
         <form onSubmit={handleSubmit(userApproveModalOpen)}>
@@ -333,7 +358,7 @@ export function UserAccount() {
                 <Button
                   size="md"
                   variant="outlined"
-                  className="w-30 tracking-wider"
+                  className="w-28 tracking-wider"
                   onClick={cancelHandler}
                 >
                   Cancel

@@ -36,7 +36,6 @@ export const usersSlice = createSlice({
     authReset(state) {
       state.isAuth = false;
     },
-
   },
 
   extraReducers(builder) {
@@ -104,7 +103,6 @@ export const usersSlice = createSlice({
       .addCase(fetchUserNewPassword.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = "";
-        // state.user = action.payload;
         // window.localStorage.removeItem("token");
         // state.isAuth = false;
       })

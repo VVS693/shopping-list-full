@@ -39,22 +39,8 @@ export function AlertDialog({
       >
         <DialogTitle id="alert-dialog-title">{text}</DialogTitle>
         <DialogActions>
-          {cancelFunc && (
-            <Button
-              onClick={handleCloseCancel}
-              autoFocus={!(Boolean(okFunc) && Boolean(cancelFunc)) || !Boolean(okFunc) ? true : false}
-            >
-              Cancel
-            </Button>
-          )}
-          {okFunc && (
-            <Button
-              onClick={handleCloseOk}
-              autoFocus={(Boolean(okFunc) && Boolean(cancelFunc)) || !Boolean(cancelFunc) ? true : false}
-            >
-              Ok
-            </Button>
-          )}
+          {cancelFunc && <Button onClick={handleCloseCancel}>Cancel</Button>}
+          {okFunc && <Button onClick={handleCloseOk}>Ok</Button>}
         </DialogActions>
       </Dialog>
     </div>
