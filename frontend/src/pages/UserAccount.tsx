@@ -1,7 +1,7 @@
 import { Button, Input } from "@material-tailwind/react";
 import Avatar from "@mui/material/Avatar";
 import { useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { SlAvatarEditor } from "../components/SlAvatarEditor";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
@@ -232,9 +232,9 @@ export function UserAccount() {
           </div>
           <div className="flex fixed justify-end w-80 bottom-8">
             <Button
-              size="md"
+              size="sm"
               variant="outlined"
-              className="w-28 tracking-wider"
+              className="w-20 tracking-wider"
               onClick={userExitModalOpen}
             >
               Exit

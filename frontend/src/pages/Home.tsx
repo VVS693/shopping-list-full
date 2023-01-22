@@ -15,6 +15,7 @@ import { Header } from "../components/Header";
 import { animateScroll } from "react-scroll";
 import { Navigate, useNavigate } from "react-router-dom";
 import { AlertDialog } from "../components/AlertDialog";
+import { FooterMenu } from "../components/FooterMenu";
 
 export function Home() {
   const dispatch = useAppDispatch();
@@ -77,7 +78,8 @@ export function Home() {
         <ShopItem item={el} key={el.id} />
       ))}
       <AddItem onAdd={onAddItemHandler} />
-      <SortButton onSortClick={onSortHandler} />
+      {/* <SortButton onSortClick={onSortHandler} /> */}
+      <FooterMenu onSortClick={onSortHandler} />
     </div>
   );
 }
