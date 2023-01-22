@@ -16,7 +16,7 @@ export function Header({ isLoading }: HeaderProps) {
 
   return (
     <div className=" sticky w-96 top-0 bg-white">
-      <div className="flex justify-between  w-full pt-3 pb-2 px-6 border-b">
+      <div className="flex justify-between  w-full pt-6 pb-2 px-6 border-b">
         <div className=" block text-left  font-bold text-2xl  select-none">
           Shopping List
         </div>
