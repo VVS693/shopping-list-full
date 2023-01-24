@@ -39,7 +39,7 @@ export function CommentEdit({
   return (
     <>
       <div className="fixed top-0 right-0 left-0 bottom-0" />
-      <div className="w-full pb-1 bg-white relative flex flex-nowrap justify-between">
+      <div className="w-full pb-1  bg-white relative flex flex-nowrap justify-between">
         <form onSubmit={submitHandler} className="w-full pr-2">
           <input
             type="text"

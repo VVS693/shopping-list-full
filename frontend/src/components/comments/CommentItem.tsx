@@ -2,22 +2,33 @@ import { useState } from "react";
 import { IComment } from "../../types";
 import { CommentEdit } from "./CommentEdit";
 import { Commentitle } from "./CommentTitle";
+import AddCommentOutlinedIcon from "@mui/icons-material/AddCommentOutlined";
 
 interface CommentItemProps {
   comment?: IComment;
-  onCommentEdit: (value: IComment) => void;
-  onCommentDel: () => void
+  onCommentEdit: (data: IComment) => void;
+  onCommentDel: (idComment: number) => void;
+  onCommentAdd: () => void;
+  isAddIcon: boolean;
 }
 
-export function CommentItem({ comment, onCommentEdit, onCommentDel }: CommentItemProps) {
+export function CommentItem({
+  comment,
+  onCommentEdit,
+  onCommentDel,
+  onCommentAdd,
+  isAddIcon,
+}: CommentItemProps) {
   const [edit, setEdit] = useState(false);
 
   const commentDelHadle = () => {
-    onCommentDel()
+    if (typeof comment?.idComment === "number") {
+      onCommentDel(comment.idComment);
+    }
   };
 
   const commentEditHandle = (value: string) => {
-    const commentData = { ...comment };
+    const commentData: IComment = structuredClone(comment);
     commentData.title = value;
     onCommentEdit(commentData);
   };
@@ -40,6 +51,12 @@ export function CommentItem({ comment, onCommentEdit, onCommentDel }: CommentIte
             editHandler={() => {
               setEdit(true);
             }}
+          />
+        )}
+        {isAddIcon && !edit && (
+          <AddCommentOutlinedIcon
+            onClick={onCommentAdd}
+            className="cursor-pointer ml-1 text-blue-gray-800"
           />
         )}
       </div>

@@ -6,18 +6,24 @@ interface ItemsState {
   items: IShopItem[];
   isLoading: boolean;
   error: string;
+  isShowComments: boolean;
 }
 
 const initialState: ItemsState = {
   items: [{ id: 0, completed: false, title: "", comments: [] }],
   isLoading: false,
   error: "",
+  isShowComments: false,
 };
 
 export const itemsSlice = createSlice({
   name: "items",
   initialState,
   reducers: {
+    showAllComments(state) {
+      state.isShowComments = !state.isShowComments;
+    },
+
     deleteItemArray(state, action: PayloadAction<IShopItem>) {
       state.items = state.items.filter((el) => el.id !== action.payload.id);
     },
@@ -42,7 +48,6 @@ export const itemsSlice = createSlice({
         return 0;
       });
     },
-
   },
 
   extraReducers(builder) {
@@ -67,6 +72,7 @@ export const {
   sortItemsArray,
   editItemArray,
   addItemArray,
+  showAllComments,
 } = itemsSlice.actions;
 
 export default itemsSlice.reducer;

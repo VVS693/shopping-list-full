@@ -1,7 +1,7 @@
 import { ErrorMessage } from "../components/ErrorMessage";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import { fetchAllSortedItems } from "../store/reducers/actionsItemsCreators";
-import { sortItemsArray } from "../store/reducers/itemsSlice";
+import { showAllComments, sortItemsArray } from "../store/reducers/itemsSlice";
 import { Header } from "../components/Header";
 import { animateScroll } from "react-scroll";
 import { FooterMenu } from "../components/FooterMenu";
@@ -20,6 +20,10 @@ export function Home() {
     dispatch(fetchAllSortedItems());
   };
 
+  const onShowAllCommentsHandler = () => {
+    dispatch(showAllComments());
+  };
+
   return (
     <div className="container mx-auto max-w-sm pb-20">
       {error ? (
@@ -28,7 +32,10 @@ export function Home() {
         <Header isLoading={isLoading} />
       )}
       <ItemsList />
-      <FooterMenu onSortClick={onSortHandler} />
+      <FooterMenu
+        onSortClick={onSortHandler}
+        onShowCommentsClick={onShowAllCommentsHandler}
+      />
     </div>
   );
 }

@@ -1,6 +1,5 @@
-import SmsOutlinedIcon from "@mui/icons-material/SmsOutlined";
-import { useState } from "react";
-import { useAppDispatch } from "../../hooks/redux";
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import {
   fetchDeleteItems,
   fetchEditItems,
@@ -9,11 +8,13 @@ import {
   deleteItemArray,
   editItemArray,
 } from "../../store/reducers/itemsSlice";
-import { IShopItem } from "../../types";
+import { IComment, IShopItem } from "../../types";
 import { CheckBox } from "./Checkbox";
-import { CommentsList } from "./CommentsList";
+import { CommentsList } from "../comments/CommentsList";
 import { ItemEdit } from "./ItemEdit";
 import { ItemTitle } from "./ItemTitle";
+import SmsOutlinedIcon from "@mui/icons-material/SmsOutlined";
+import ModeCommentOutlinedIcon from "@mui/icons-material/ModeCommentOutlined";
 
 interface ShopItemProps {
   item: IShopItem;
@@ -21,9 +22,9 @@ interface ShopItemProps {
 
 export function ShopItem({ item }: ShopItemProps) {
   const dispatch = useAppDispatch();
-
+  const { isShowComments } = useAppSelector((state) => state.itemsReducer);
   const [edit, setEdit] = useState(false);
-  const [showComments, setShowComments] = useState(false);
+  const [showComments, setShowComments] = useState(isShowComments);
 
   const onItemDel = () => {
     dispatch(deleteItemArray(item));
@@ -31,18 +32,27 @@ export function ShopItem({ item }: ShopItemProps) {
   };
 
   const toggleCompleted = () => {
-    const itemData: IShopItem = { ...item };
+    const itemData: IShopItem = structuredClone(item);
     itemData.completed = !item.completed;
     dispatch(editItemArray(itemData));
     dispatch(fetchEditItems(itemData));
   };
 
   const onItemEdit = (value: string) => {
-    const itemData: IShopItem = { ...item };
+    const itemData: IShopItem = structuredClone(item);
     itemData.title = value;
     dispatch(editItemArray(itemData));
     dispatch(fetchEditItems(itemData));
   };
+
+  const allCommentsUpdateHandler = (allCommentsData: IComment[]) => {
+    const itemData: IShopItem = structuredClone(item);
+    itemData.comments = allCommentsData;
+    dispatch(editItemArray(itemData));
+    dispatch(fetchEditItems(itemData));
+  };
+
+  useEffect(() => setShowComments(isShowComments), [isShowComments]);
 
   return (
     <div className="flexflex-col items-start px-4 border-b">
@@ -71,14 +81,19 @@ export function ShopItem({ item }: ShopItemProps) {
         )}
 
         {!!item.comments?.length && !edit && (
-          <SmsOutlinedIcon
+          <ModeCommentOutlinedIcon
             onClick={() => setShowComments(!showComments)}
             className="cursor-pointer text-blue-gray-800"
           />
         )}
       </div>
 
-      {showComments && <CommentsList item={item} />}
+      {showComments && (
+        <CommentsList
+          comments={item.comments}
+          onCommentsUpdate={allCommentsUpdateHandler}
+        />
+      )}
     </div>
   );
 }
