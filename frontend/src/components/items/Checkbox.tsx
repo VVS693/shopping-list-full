@@ -5,7 +5,7 @@ interface CheckboxProps {
 
 export function CheckBox({ isCompleted, onChangeCheckBox }: CheckboxProps) {
   return (
-    <div onClick={onChangeCheckBox} className="select-none">
+    <div onClick={onChangeCheckBox} className="select-none cursor-pointer">
       {!isCompleted ? (
         <svg
           xmlns="http://www.w3.org/2000/svg"

@@ -39,8 +39,16 @@ export function AlertDialog({
       >
         <DialogTitle id="alert-dialog-title">{text}</DialogTitle>
         <DialogActions>
-          {cancelFunc && <Button onClick={handleCloseCancel}>Cancel</Button>}
-          {okFunc && <Button onClick={handleCloseOk}>Ok</Button>}
+          {cancelFunc && (
+            <Button onClick={handleCloseCancel}>
+              Cancel
+            </Button>
+          )}
+          {okFunc && (
+            <Button onClick={handleCloseOk}>
+              Ok
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     </div>

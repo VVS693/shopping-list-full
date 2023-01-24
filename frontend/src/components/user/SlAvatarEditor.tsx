@@ -2,7 +2,7 @@ import AvatarEditor from "react-avatar-editor";
 import Slider from "@mui/material/Slider";
 import React, { useRef, useState } from "react";
 import { Button } from "@material-tailwind/react";
-import { useAppSelector } from "../hooks/redux";
+import { useAppSelector } from "../../hooks/redux";
 
 interface SlAvatarEditorProps {
   onEditAvatar: (data: FormData) => void;

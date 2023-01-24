@@ -1,8 +1,19 @@
+
+
+export interface IComment {
+  idComment?: number;
+  user?: IUser;
+  title?: string;
+}
+
 export interface IShopItem {
   id: number;
   completed: boolean;
   title: string;
+  comments?: IComment[]
 }
+
+
 
 export interface IUser {
   _id: string;

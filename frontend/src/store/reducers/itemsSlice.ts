@@ -9,7 +9,7 @@ interface ItemsState {
 }
 
 const initialState: ItemsState = {
-  items: [],
+  items: [{ id: 0, completed: false, title: "", comments: [] }],
   isLoading: false,
   error: "",
 };
@@ -27,6 +27,7 @@ export const itemsSlice = createSlice({
         if (el.id === action.payload.id) {
           el.completed = action.payload.completed;
           el.title = action.payload.title;
+          el.comments = action.payload.comments;
         }
       });
     },
@@ -41,6 +42,7 @@ export const itemsSlice = createSlice({
         return 0;
       });
     },
+
   },
 
   extraReducers(builder) {
@@ -60,7 +62,11 @@ export const itemsSlice = createSlice({
   },
 });
 
-export const { deleteItemArray, sortItemsArray, editItemArray, addItemArray } =
-  itemsSlice.actions;
+export const {
+  deleteItemArray,
+  sortItemsArray,
+  editItemArray,
+  addItemArray,
+} = itemsSlice.actions;
 
 export default itemsSlice.reducer;

@@ -54,6 +54,7 @@ export const updateItem = async (req, res) => {
       {
         completed: req.body.completed,
         title: req.body.title,
+        comments: req.body.comments
       }
     );
 

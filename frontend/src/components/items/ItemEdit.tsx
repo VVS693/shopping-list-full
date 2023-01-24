@@ -19,6 +19,8 @@ export function ItemEdit({ title, editHandler, delHandler }: ShopItemProps) {
     if (!isDel.current) {
       if (value.trim().length !== 0) {
         editHandler(value);
+      } else {
+        delHandler()
       }
     }
   };
@@ -52,9 +54,6 @@ export function ItemEdit({ title, editHandler, delHandler }: ShopItemProps) {
             isDel.current = true;
             delHandler();
           }}
-          // onClick={() => {
-          //   console.log("onClick")
-          //   deleteItem()}}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

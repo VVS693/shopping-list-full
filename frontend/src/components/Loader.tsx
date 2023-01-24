@@ -6,7 +6,7 @@ export function Loader() {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="w-10 h-10 animate-spin"
+      className="w-10 h-10 animate-spin text-blue-gray-800"
     >
       <path
         strokeLinecap="round"

@@ -3,7 +3,7 @@ import Avatar from "@mui/material/Avatar";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { SlAvatarEditor } from "../components/SlAvatarEditor";
+import { SlAvatarEditor } from "../components/user/SlAvatarEditor";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import { authReset, defaultAvatarImage } from "../store/reducers/usersSlice";
 import { eyeIcon, eyeSlashIcon } from "../components/icons";

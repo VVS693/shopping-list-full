@@ -10,7 +10,7 @@ export function FooterMenu({
   onShowCommentsClick,
 }: FooterMenuProps) {
   return (
-    <div className="flex w-96 fixed justify-between bottom-0 px-4 pb-8 pt-3 border-t bg-white">
+    <div className="flex w-96 fixed justify-around bottom-0 px-4 pb-8 pt-3 border-t bg-white">
       <Button
         size="sm"
         variant="outlined"
