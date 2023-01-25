@@ -5,6 +5,7 @@ import {
   fetchAddItems,
   fetchAllSortedItems,
 } from "../../store/reducers/actionsItemsCreators";
+import { fetchAllUsers } from "../../store/reducers/actionUserCreators";
 import { addItemArray } from "../../store/reducers/itemsSlice";
 import { IShopItem } from "../../types";
 import { AddItem } from "./AddItem";
@@ -30,6 +31,7 @@ export function ItemsList() {
   };
 
   useEffect(() => {
+    dispatch(fetchAllUsers())
     dispatch(fetchAllSortedItems());
   }, []);
 

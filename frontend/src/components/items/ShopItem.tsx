@@ -13,8 +13,8 @@ import { CheckBox } from "./Checkbox";
 import { CommentsList } from "../comments/CommentsList";
 import { ItemEdit } from "./ItemEdit";
 import { ItemTitle } from "./ItemTitle";
-import SmsOutlinedIcon from "@mui/icons-material/SmsOutlined";
-import ModeCommentOutlinedIcon from "@mui/icons-material/ModeCommentOutlined";
+import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
+import AddCommentOutlinedIcon from "@mui/icons-material/AddCommentOutlined";
 
 interface ShopItemProps {
   item: IShopItem;
@@ -25,6 +25,7 @@ export function ShopItem({ item }: ShopItemProps) {
   const { isShowComments } = useAppSelector((state) => state.itemsReducer);
   const [edit, setEdit] = useState(false);
   const [showComments, setShowComments] = useState(isShowComments);
+  const [addNewComment, setAddNewComment] = useState(false);
 
   const onItemDel = () => {
     dispatch(deleteItemArray(item));
@@ -48,6 +49,9 @@ export function ShopItem({ item }: ShopItemProps) {
   const allCommentsUpdateHandler = (allCommentsData: IComment[]) => {
     const itemData: IShopItem = structuredClone(item);
     itemData.comments = allCommentsData;
+    if (allCommentsData.length === 0) {
+      setShowComments(false)
+    }
     dispatch(editItemArray(itemData));
     dispatch(fetchEditItems(itemData));
   };
@@ -55,7 +59,7 @@ export function ShopItem({ item }: ShopItemProps) {
   useEffect(() => setShowComments(isShowComments), [isShowComments]);
 
   return (
-    <div className="flexflex-col items-start px-4 border-b">
+    <div className="flexflex-col items-start pl-4 pr-3 border-b">
       <div className="flex items-center w-full">
         <CheckBox
           isCompleted={item.completed}
@@ -80,11 +84,24 @@ export function ShopItem({ item }: ShopItemProps) {
           />
         )}
 
-        {!!item.comments?.length && !edit && (
-          <ModeCommentOutlinedIcon
-            onClick={() => setShowComments(!showComments)}
-            className="cursor-pointer text-blue-gray-800"
+        {!!item.comments?.length && !edit ? (
+          <CommentOutlinedIcon
+            onClick={() => {
+              setShowComments(!showComments);
+              setAddNewComment(false);
+            }}
+            className="cursor-pointer mr-1 text-blue-gray-800"
           />
+        ) : (
+          !edit && (
+            <AddCommentOutlinedIcon
+              onClick={() => {
+                setShowComments(true);
+                setAddNewComment(true);
+              }}
+              className="cursor-pointer mr-1 text-blue-gray-800"
+            />
+          )
         )}
       </div>
 
@@ -92,6 +109,11 @@ export function ShopItem({ item }: ShopItemProps) {
         <CommentsList
           comments={item.comments}
           onCommentsUpdate={allCommentsUpdateHandler}
+          onAddNewComment={addNewComment}
+          onAddNewCommentCancel={() => {
+            setAddNewComment(false);
+            setShowComments(false);
+          }}
         />
       )}
     </div>

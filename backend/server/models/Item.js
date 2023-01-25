@@ -20,7 +20,7 @@ const ItemSchema = new mongoose.Schema(
           type: Number,
           require: true,
         },
-        user: {
+        userId: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "User",
           require: true,

@@ -46,6 +46,7 @@ app.use(express.static(path.resolve(__dirname, "../frontend/build")));
 app.post("/auth/login", UserController.login);
 app.post("/auth/register", UserController.register);
 app.get("/auth/me", checkAuth, UserController.getMe);
+app.get("/auth/all", checkAuth, UserController.getAllUsers);
 
 app.patch("/auth/update/name", checkAuth, UserController.updateUserName);
 app.patch("/auth/update/avatar", checkAuth, UserController.updateUserAvatar);
@@ -61,7 +62,7 @@ app.post(
 app.delete("/avatars/:avatar", checkAuth, UserController.delOldAvatarImage);
 
 
-app.get("/items", ItemController.getAllItems)
+app.get("/items", checkAuth, ItemController.getAllItems)
 app.post("/items", checkAuth, ItemController.createItem)
 app.delete("/items/:id", checkAuth, ItemController.removeItem)
 app.patch("/items/:id", checkAuth, ItemController.updateItem)

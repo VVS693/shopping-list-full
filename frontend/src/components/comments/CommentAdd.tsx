@@ -22,7 +22,6 @@ export function CommentAdd({ onCommentAddValue, isAddVisible }: CommentAddProps)
     <>
       {isAddVisible && (
         <div className="flex w-full pb-1 items-center">
-          {/* <CheckBox isCompleted={false} onChangeCheckBox={() => {}} /> */}
           <div className="fixed top-0 right-0 left-0 bottom-0" />
           <div className="w-full  bg-white relative">
             <form onSubmit={submitHandler}>

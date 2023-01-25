@@ -6,6 +6,7 @@ import { Header } from "../components/Header";
 import { animateScroll } from "react-scroll";
 import { FooterMenu } from "../components/FooterMenu";
 import { ItemsList } from "../components/items/ItemsList";
+import { fetchAllUsers } from "../store/reducers/actionUserCreators";
 
 export function Home() {
   const dispatch = useAppDispatch();
@@ -18,6 +19,7 @@ export function Home() {
     });
     dispatch(sortItemsArray());
     dispatch(fetchAllSortedItems());
+    dispatch(fetchAllUsers())
   };
 
   const onShowAllCommentsHandler = () => {

@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IUser } from "../../types";
 import {
+  fetchAllUsers,
   fetchUserLogin,
   fetchUserMe,
   fetchUserNewPassword,
@@ -10,6 +11,7 @@ import {
 
 interface UserState {
   user: IUser;
+  users: IUser[]
   isLoading: boolean;
   error: string;
   isAuth: boolean;
@@ -19,6 +21,7 @@ interface UserState {
 
 const initialState: UserState = {
   user: { _id: "", name: "", avatar: "" },
+  users: [],
   isLoading: false,
   error: "",
   isAuth: false,
@@ -70,6 +73,20 @@ export const usersSlice = createSlice({
         state.isAuth = false;
       })
 
+      .addCase(fetchAllUsers.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchAllUsers.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = "";
+        state.users = action.payload;
+      })
+      .addCase(fetchAllUsers.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message as string;
+        state.isAuth = false;
+      })
+
       .addCase(fetchUserUpdateName.pending, (state) => {
         state.isLoading = true;
       })
@@ -103,8 +120,6 @@ export const usersSlice = createSlice({
       .addCase(fetchUserNewPassword.fulfilled, (state, action) => {
         state.isLoading = false;
         state.error = "";
-        // window.localStorage.removeItem("token");
-        // state.isAuth = false;
       })
       .addCase(fetchUserNewPassword.rejected, (state, action) => {
         state.isLoading = false;

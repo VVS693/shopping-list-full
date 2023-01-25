@@ -1,17 +1,24 @@
 import { useState } from "react";
-import { IComment } from "../../types";
+import { useAppSelector } from "../../hooks/redux";
+import { IComment, IUser } from "../../types";
 import { CommentAdd } from "./CommentAdd";
 import { CommentItem } from "./CommentItem";
 
 interface CommentsListProps {
   comments?: IComment[];
   onCommentsUpdate: (data: IComment[]) => void;
+  onAddNewComment: boolean;
+  onAddNewCommentCancel: () => void;
 }
 
 export function CommentsList({
   comments,
   onCommentsUpdate,
+  onAddNewComment,
+  onAddNewCommentCancel,
 }: CommentsListProps) {
+  const { user, users } = useAppSelector((state) => state.userReducer);
+
   const commentEditHandle = (commentData: IComment) => {
     const allCommentsData: IComment[] = structuredClone(comments);
     allCommentsData.map((el: IComment) => {
@@ -37,28 +44,35 @@ export function CommentsList({
   };
 
   const onCommentAddValueHandler = (value: string) => {
-    console.log(value);
     if (value.trim().length === 0) {
       setIsAddVisible(false);
+      onAddNewCommentCancel();
       return;
     }
     const allCommentsData: IComment[] = structuredClone(comments);
     const commentData: IComment = {
       idComment: new Date().getTime(),
       title: value,
+      userId: user._id,
     };
     allCommentsData.push(commentData);
     onCommentsUpdate(allCommentsData);
     setIsAddVisible(false);
   };
 
-  const [isAddVisible, setIsAddVisible] = useState(false);
+  const [isAddVisible, setIsAddVisible] = useState(onAddNewComment);
+
+  const userAvatarSearch = (el: IComment) => {
+    const commentsUser = users.find((item: IUser) => item._id === el.userId);
+    return commentsUser?.avatar;
+  };
 
   return (
     <div className="w-full">
       {comments?.map((el, index) => (
         <CommentItem
           comment={el}
+          userAvatar={userAvatarSearch(el)}
           onCommentEdit={commentEditHandle}
           onCommentDel={commentDelHandle}
           onCommentAdd={commentAddVisible}

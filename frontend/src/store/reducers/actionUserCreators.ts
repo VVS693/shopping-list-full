@@ -38,6 +38,19 @@ export const fetchUserMe = createAsyncThunk(
   }
 );
 
+
+export const fetchAllUsers = createAsyncThunk(
+  "fetchAllUsers",
+  async (_, thunkAPI) => {
+    try {
+      const response = await clientDatabase.get<IUser[]>("/auth/all");
+      return response.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue("Error loading all users...");
+    }
+  }
+);
+
 export const fetchUploadUserAvatar = createAsyncThunk(
   "fetchUploadUserAvatar",
   async (data: FormData, thunkAPI) => {

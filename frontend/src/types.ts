@@ -2,7 +2,7 @@
 
 export interface IComment {
   idComment?: number;
-  user?: IUser;
+  userId?: string;
   title?: string;
 }
 

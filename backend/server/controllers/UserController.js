@@ -136,6 +136,18 @@ export const getMe = async (req, res) => {
   }
 };
 
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await UserModel.find();
+    res.json(users);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Failed to get users!",
+    });
+  }
+};
+
 export const updateUserName = async (req, res) => {
   try {
     const user = await UserModel.findOne({ name: req.body.name });
