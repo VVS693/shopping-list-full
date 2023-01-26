@@ -27,7 +27,11 @@ export function Login() {
 
   const onSubmit: SubmitHandler<ILoginInput> = async (data) => {
     try {
-      const dataUser = await dispatch(fetchUserLogin(data)).unwrap();
+      const sendData: ILoginInput = {
+        name: data.name.trim(),
+        password: data.password.trim(),
+      };
+      const dataUser = await dispatch(fetchUserLogin(sendData)).unwrap();
       if (dataUser.token) {
         window.localStorage.setItem("token", dataUser.token);
       }

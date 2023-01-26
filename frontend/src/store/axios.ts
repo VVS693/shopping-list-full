@@ -1,12 +1,16 @@
 import axios from "axios";
 
-// export const clientDatabase = axios.create({
-//   baseURL: "http://localhost:3001",
-// });
+// Change what you want
 
 export const clientDatabase = axios.create({
-  baseURL: "http://sl.vvs693.ru:3001",
+  baseURL: "http://localhost:3001",
 });
+
+
+// export const clientDatabase = axios.create({
+//   baseURL: "https://sl.vvs693.ru:3001",
+// });
+
 
 clientDatabase.interceptors.request.use((config) => {
   config.headers!.authorization = window.localStorage.getItem("token");
