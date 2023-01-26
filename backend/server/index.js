@@ -34,10 +34,20 @@ const app = express();
 
 app.use(express.json());
 
-const corsOptions = {
-  origin: "http://localhost:3000",
-};
-app.use(cors(corsOptions));
+// const corsOptions = {
+//   origin: "http://localhost:3000",
+// };
+// app.use(cors(corsOptions));
+
+app.use(cors());
+
+
+console.log(path.resolve(__dirname, "avatars"))
+console.log(path.resolve(__dirname, "../frontend/build"))
+
+// app.use("/avatars", express.static(path.resolve(__dirname, "avatars")));
+// app.use("/avatars/default", express.static(path.resolve(__dirname, "avatars/default")));
+
 
 app.use(express.static(path.resolve(__dirname, "avatars")));
 app.use(express.static(path.resolve(__dirname, "avatars/default")));
@@ -68,10 +78,8 @@ app.delete("/items/:id", checkAuth, ItemController.removeItem)
 app.patch("/items/:id", checkAuth, ItemController.updateItem)
 
 
-
-
 app.get("/*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "../frontend/build", "index.html"));
+  res.sendFile(path.resolve(__dirname, "../../frontend/build", "index.html"));
 });
 
 app.listen(PORT, () => {

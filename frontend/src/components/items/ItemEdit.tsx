@@ -16,11 +16,13 @@ export function ItemEdit({ title, editHandler, delHandler }: ShopItemProps) {
   let isDel = useRef(false);
   const submitHandler = (event: React.FormEvent) => {
     event.preventDefault();
+    // console.log("Submit " + isDel.current)
     if (!isDel.current) {
+      // console.log("EDIT!!!")
       if (value.trim().length !== 0) {
         editHandler(value);
       } else {
-        delHandler()
+        delHandler();
       }
     }
   };
@@ -29,6 +31,17 @@ export function ItemEdit({ title, editHandler, delHandler }: ShopItemProps) {
   useEffect(() => {
     inputReference.current.focus();
   }, []);
+
+  const onFocusHandler = () => {
+    // console.log("Focus")
+    isDel.current = true;
+    delHandler();
+  };
+  const onClickHandler = () => {
+    // console.log("Click")
+    isDel.current = true;
+    delHandler();
+  };
 
   return (
     <>
@@ -50,10 +63,8 @@ export function ItemEdit({ title, editHandler, delHandler }: ShopItemProps) {
         </form>
         <button
           className="absolute top-0 bottom-0 right-0"
-          onFocus={() => {
-            isDel.current = true;
-            delHandler();
-          }}
+          onFocus={onFocusHandler}
+          onClick={onClickHandler}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

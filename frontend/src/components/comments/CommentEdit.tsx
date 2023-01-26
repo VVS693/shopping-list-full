@@ -36,6 +36,17 @@ export function CommentEdit({
     inputReference.current.focus();
   }, []);
 
+  const onFocusHandler = () => {
+    // console.log("Focus")
+    isDel.current = true;
+    delHandler();
+  };
+  const onClickHandler = () => {
+    // console.log("Click")
+    isDel.current = true;
+    delHandler();
+  };
+
   return (
     <>
       <div className="fixed top-0 right-0 left-0 bottom-0" />
@@ -56,10 +67,8 @@ export function CommentEdit({
         </form>
         <button
           className="absolute top-0 bottom-1 right-1"
-          onFocus={() => {
-            isDel.current = true;
-            delHandler();
-          }}
+          onFocus={onFocusHandler}
+          onClick={onClickHandler}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
