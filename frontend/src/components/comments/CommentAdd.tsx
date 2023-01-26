@@ -14,6 +14,7 @@ export function CommentAdd({ onCommentAddValue, isAddVisible }: CommentAddProps)
 
   const submitHandler = (event: React.FormEvent) => {
     event.preventDefault();
+    console.log("Submit comment " + value)
     onCommentAddValue(value);
     setValue("");
   };

@@ -55,8 +55,21 @@ export function CommentsList({
       title: value,
       userId: user._id,
     };
-    allCommentsData.push(commentData);
-    onCommentsUpdate(allCommentsData);
+    const commentDataFirst: IComment[] = [
+      {
+        idComment: new Date().getTime(),
+        title: value,
+        userId: user._id,
+      },
+    ];
+
+    if (allCommentsData) {
+      allCommentsData.push(commentData);
+      onCommentsUpdate(allCommentsData);
+    } else {
+      onCommentsUpdate(commentDataFirst);
+    }
+
     setIsAddVisible(false);
   };
 
