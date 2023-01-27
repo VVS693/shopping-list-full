@@ -2,14 +2,14 @@ import axios from "axios";
 
 // Change what you want
 
-export const clientDatabase = axios.create({
-  baseURL: "http://localhost:3001",
-});
-
-
 // export const clientDatabase = axios.create({
-//   baseURL: "https://sl.vvs693.ru:3001",
+//   baseURL: "http://localhost:3001",
 // });
+
+
+export const clientDatabase = axios.create({
+  baseURL: "https://sl.vvs693.ru",
+});
 
 
 clientDatabase.interceptors.request.use((config) => {
