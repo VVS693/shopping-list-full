@@ -5,11 +5,11 @@ import path from "path";
 import multer from "multer";
 import mongoose from "mongoose";
 import cors from "cors";
-import * as UserController from "./controllers/UserController.js";
-import * as ItemController from "./controllers/ItemController.js";
-import checkAuth from "./middlewares/checkAuth.js";
-// import fs from "fs";
-// import https from "https"
+import * as UserController from "./server/controllers/UserController.js";
+import * as ItemController from "./server/controllers/ItemController.js";
+import checkAuth from "./server/middlewares/checkAuth.js";
+import fs from "fs";
+import https from "https"
 
 const PORT = process.env.PORT || 3001;
 export const __dirname = path.resolve();
@@ -34,10 +34,10 @@ export const upload = multer({ storage });
 
 const app = express();
 
-// const options = {
-//   cert: fs.readFileSync("./server/sslcert/sl.vvs693.ru_2023-01-26-16-08_14.crt"),
-//   key: fs.readFileSync("./server/sslcert/sl.vvs693.ru_2023-01-26-16-08_14.key")
-// };
+const options = {
+  cert: fs.readFileSync("./server/sslcert/sl.vvs693.ru_2023-01-26-16-08_14.crt"),
+  key: fs.readFileSync("./server/sslcert/sl.vvs693.ru_2023-01-26-16-08_14.key")
+};
 
 app.use(express.json());
 
@@ -50,9 +50,6 @@ app.use(cors());
 
 console.log(path.resolve(__dirname, "avatars"));
 console.log(path.resolve(__dirname, "../frontend/build"));
-
-// app.use("/avatars", express.static(path.resolve(__dirname, "avatars")));
-// app.use("/avatars/default", express.static(path.resolve(__dirname, "avatars/default")));
 
 app.use(express.static(path.resolve(__dirname, "avatars")));
 app.use(express.static(path.resolve(__dirname, "avatars/default")));
@@ -85,10 +82,10 @@ app.get("/*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "../../frontend/build", "index.html"));
 });
 
-app.listen(PORT, () => {
-  console.log(`Server listening on ${PORT}`);
-});
-
-// https.createServer(options, app).listen(PORT, () => {
+// app.listen(PORT, () => {
 //   console.log(`Server listening on ${PORT}`);
 // });
+
+https.createServer(options, app).listen(PORT, () => {
+  console.log(`Server listening on ${PORT}`);
+});
