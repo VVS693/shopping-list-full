@@ -3,6 +3,7 @@ import { useAppSelector } from "../../hooks/redux";
 import { IComment, IUser } from "../../types";
 import { CommentAdd } from "./CommentAdd";
 import { CommentItem } from "./CommentItem";
+import { v4 } from "uuid";
 
 interface CommentsListProps {
   comments?: IComment[];
@@ -51,13 +52,13 @@ export function CommentsList({
     }
     const allCommentsData: IComment[] = structuredClone(comments);
     const commentData: IComment = {
-      idComment: new Date().getTime(),
+      idComment: v4(),
       title: value,
       userId: user._id,
     };
     const commentDataFirst: IComment[] = [
       {
-        idComment: new Date().getTime(),
+        idComment: v4(),
         title: value,
         userId: user._id,
       },
