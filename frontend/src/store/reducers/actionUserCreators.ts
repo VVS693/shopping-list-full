@@ -75,7 +75,6 @@ export const delOldUserAvatar = createAsyncThunk(
   "delOldUserAvatar",
   async (oldUrl: string, thunkAPI) => {
     try {
-      console.log(oldUrl);
       const response = await clientDatabase.delete<string>(
         `/avatars/${oldUrl}`
       );
@@ -116,11 +115,9 @@ export const fetchUserNewPassword = createAsyncThunk(
   async (userData: IUserNewPassword, thunkAPI) => {
     try {
       await clientDatabase.patch("/auth/password", userData);
-      // return userData;
       return;
     } catch (err: any) {
-      // return thunkAPI.rejectWithValue("Error update password...");
-      return thunkAPI.rejectWithValue(err.response.data.message as string);
+      return thunkAPI.rejectWithValue(err.response.data.message);
     }
   }
 );

@@ -10,7 +10,7 @@ import { addItemArray } from "../../store/reducers/itemsSlice";
 import { IShopItem } from "../../types";
 import { AddItem } from "./AddItem";
 import { ShopItem } from "./ShopItem";
-
+import { v4 } from 'uuid';
 export function ItemsList() {
   const dispatch = useAppDispatch();
   const { items } = useAppSelector((state) => state.itemsReducer);
@@ -22,7 +22,7 @@ export function ItemsList() {
     });
 
     const itemData: IShopItem = {
-      id: new Date().getTime(),
+      id: v4(),
       completed: false,
       title: value,
     };

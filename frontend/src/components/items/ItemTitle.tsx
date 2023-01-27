@@ -1,12 +1,12 @@
 interface ShopItemProps {
   title: string;
-  editHandler: () => void;
+  onClick: () => void;
 }
 
-export function ItemTitle({ title, editHandler }: ShopItemProps) {
+export function ItemTitle({ title, onClick }: ShopItemProps) {
   return (
     <button
-      onClick={editHandler}
+      onClick={onClick}
       className="pl-4 py-3 w-full text-left text-xl select-none"
     >
       {title}

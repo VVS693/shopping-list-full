@@ -23,23 +23,26 @@ interface ShopItemProps {
 export function ShopItem({ item }: ShopItemProps) {
   const dispatch = useAppDispatch();
   const { isShowComments } = useAppSelector((state) => state.itemsReducer);
-  const [edit, setEdit] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [showComments, setShowComments] = useState(isShowComments);
   const [addNewComment, setAddNewComment] = useState(false);
 
-  const onItemDel = () => {
+  const handleItemDel = () => {
     dispatch(deleteItemArray(item));
     dispatch(fetchDeleteItems(item));
   };
 
   const toggleCompleted = () => {
-    const itemData: IShopItem = structuredClone(item);
-    itemData.completed = !item.completed;
+    // тут нужно только один уровеь копировать
+    const itemData: IShopItem = {
+      ...item,
+      completed: !item.completed
+    }
     dispatch(editItemArray(itemData));
     dispatch(fetchEditItems(itemData));
   };
 
-  const onItemEdit = (value: string) => {
+  const handleItemEdit = (value: string) => {
     const itemData: IShopItem = structuredClone(item);
     itemData.title = value;
     dispatch(editItemArray(itemData));
@@ -66,25 +69,25 @@ export function ShopItem({ item }: ShopItemProps) {
           onChangeCheckBox={toggleCompleted}
         />
 
-        {edit ? (
+        {isEditing ? (
           <ItemEdit
             title={item.title}
-            editHandler={(el) => {
-              setEdit(false);
-              onItemEdit(el);
+            onEdit={(el) => {
+              setIsEditing(false);
+              handleItemEdit(el);
             }}
-            delHandler={onItemDel}
+            onDel={handleItemDel}
           />
         ) : (
           <ItemTitle
             title={item.title}
-            editHandler={() => {
-              setEdit(true);
+            onClick={() => {
+              setIsEditing(true);
             }}
           />
         )}
 
-        {!!item.comments?.length && !edit ? (
+        {!!item.comments?.length && !isEditing ? (
           <CommentOutlinedIcon
             onClick={() => {
               setShowComments(!showComments);
@@ -93,7 +96,7 @@ export function ShopItem({ item }: ShopItemProps) {
             className="cursor-pointer mr-1 text-blue-gray-800"
           />
         ) : (
-          !edit && (
+          !isEditing && (
             <AddCommentOutlinedIcon
               onClick={() => {
                 setShowComments(true);
