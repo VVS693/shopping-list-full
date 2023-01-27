@@ -2,27 +2,25 @@ import { useEffect, useRef, useState } from "react";
 
 interface ShopItemProps {
   title: string;
-  editHandler: (el: string) => void;
-  delHandler: () => void;
+  onEdit: (el: string) => void;
+  onDel: () => void;
 }
 
-export function ItemEdit({ title, editHandler, delHandler }: ShopItemProps) {
+export function ItemEdit({ title, onEdit, onDel }: ShopItemProps) {
   const [value, setValue] = useState(title);
 
   const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
 
-  let isDel = useRef(false);
+  const isDel = useRef(false);
   const submitHandler = (event: React.FormEvent) => {
     event.preventDefault();
-    // console.log("Submit " + isDel.current)
     if (!isDel.current) {
-      // console.log("EDIT!!!")
       if (value.trim().length !== 0) {
-        editHandler(value);
+        onEdit(value);
       } else {
-        delHandler();
+        onDel();
       }
     }
   };
@@ -33,14 +31,12 @@ export function ItemEdit({ title, editHandler, delHandler }: ShopItemProps) {
   }, []);
 
   const onFocusHandler = () => {
-    // console.log("Focus")
     isDel.current = true;
-    delHandler();
+    onDel();
   };
   const onClickHandler = () => {
-    // console.log("Click")
     isDel.current = true;
-    delHandler();
+    onDel();
   };
 
   return (

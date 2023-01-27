@@ -2,6 +2,11 @@ import axios from "axios";
 
 // Change what you want
 
+export const clientDatabase = axios.create({
+  baseURL: "http://sl.vvs693.ru",
+});
+
+
 // export const clientDatabase = axios.create({
 //   baseURL: "http://localhost:3001",
 // });

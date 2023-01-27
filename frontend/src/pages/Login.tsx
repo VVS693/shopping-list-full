@@ -16,7 +16,7 @@ export function Login() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [isAlertDialogOpen, setAlertDialogOpen] = useState(false);
-  const [alertDialogText, setalertDialogText] = useState("");
+  const [alertDialogText, setAlertDialogText] = useState("");
 
   const {
     register,
@@ -37,10 +37,10 @@ export function Login() {
       }
     } catch (error) {
       setAlertDialogOpen(true);
-      setalertDialogText("Login or password is incorrect...");
+      setAlertDialogText("Login or password is incorrect...");
     }
   };
-  const okFuncHadler = () => {
+  const okFuncHandler = () => {
     setAlertDialogOpen(false);
     reset();
   };
@@ -97,7 +97,7 @@ export function Login() {
       <AlertDialog
         isOpen={isAlertDialogOpen}
         text={alertDialogText}
-        okFunc={okFuncHadler}
+        okFunc={okFuncHandler}
       />
     </div>
   );

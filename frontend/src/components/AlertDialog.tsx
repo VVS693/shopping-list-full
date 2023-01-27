@@ -17,25 +17,20 @@ export function AlertDialog({
   okFunc,
 }: AlertDialogProps) {
   const handleCloseOk = () => {
-    if (okFunc) {
-      okFunc();
-    }
+    okFunc && okFunc();
   };
 
   const handleCloseCancel = () => {
-    if (cancelFunc) {
-      cancelFunc();
-    }
+    cancelFunc && cancelFunc();
   };
 
   return (
-    <div>
       <Dialog
         open={isOpen}
         onClose={handleCloseCancel}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        fullWidth={true}
+        fullWidth
       >
         <DialogTitle id="alert-dialog-title">{text}</DialogTitle>
         <DialogActions>
@@ -51,6 +46,5 @@ export function AlertDialog({
           )}
         </DialogActions>
       </Dialog>
-    </div>
   );
 }

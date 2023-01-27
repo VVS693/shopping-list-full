@@ -7,7 +7,7 @@ interface AddItemProps {
 
 export function AddItem({ onAdd }: AddItemProps) {
   const [value, setValue] = useState("");
-  const [add, setAdd] = useState(false);
+  const [isAddFormVisible, setIsAddFormVisible] = useState(false);
 
   const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
@@ -16,23 +16,22 @@ export function AddItem({ onAdd }: AddItemProps) {
   const submitHandler = (event: React.FormEvent) => {
     event.preventDefault();
     if (value.trim().length === 0) {
-      setAdd(false);
-      return;
+      return setIsAddFormVisible(false);
     }
-    onAdd(value);
-    setAdd(false);
+    onAdd(value.trim());
+    setIsAddFormVisible(false);
     setValue("");
   };
 
   return (
     <>
-      {!add ? (
+      {!isAddFormVisible ? (
         <button
           className="py-3 w-full h-14 text-left pl-16"
           onClick={() => {
-            setAdd(true);
+            setIsAddFormVisible(true);
           }}
-        ></button>
+        />
       ) : (
         <div className="flex w-full px-4 items-center">
           <CheckBox isCompleted={false} onChangeCheckBox={() => {}} />

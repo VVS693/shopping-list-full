@@ -7,7 +7,7 @@ export interface IComment {
 }
 
 export interface IShopItem {
-  id: number;
+  id: number | string;
   completed: boolean;
   title: string;
   comments?: IComment[]
