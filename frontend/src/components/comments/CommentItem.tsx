@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { IComment } from "../../types";
 import { CommentEdit } from "./CommentEdit";
 import { Commentitle } from "./CommentTitle";
@@ -10,9 +10,10 @@ interface CommentItemProps {
   comment?: IComment;
   userAvatar?: string;
   onCommentEdit: (data: IComment) => void;
-  onCommentDel: (idComment: number) => void;
+  onCommentDel: (idComment: string) => void;
   onCommentAdd: () => void;
   isAddIcon: boolean;
+  ref?: any
 }
 
 export function CommentItem({
@@ -26,7 +27,7 @@ export function CommentItem({
   const [edit, setEdit] = useState(false);
 
   const commentDelHadle = () => {
-    if (typeof comment?.idComment === "number") {
+    if (typeof comment?.idComment === "string") {
       onCommentDel(comment.idComment);
     }
   };

@@ -1,13 +1,13 @@
 
 
 export interface IComment {
-  idComment?: number | string;
+  idComment?: string;
   userId?: string;
   title?: string;
 }
 
 export interface IShopItem {
-  id: number | string;
+  id: string;
   completed: boolean;
   title: string;
   comments?: IComment[]

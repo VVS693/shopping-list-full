@@ -2,7 +2,7 @@ import { ErrorMessage } from "../components/ErrorMessage";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import { fetchAllSortedItems } from "../store/reducers/actionsItemsCreators";
 import { showAllComments, sortItemsArray } from "../store/reducers/itemsSlice";
-import { Header } from "../components/Header";
+import { Header } from "../components/header/Header";
 import { animateScroll } from "react-scroll";
 import { FooterMenu } from "../components/FooterMenu";
 import { ItemsList } from "../components/items/ItemsList";

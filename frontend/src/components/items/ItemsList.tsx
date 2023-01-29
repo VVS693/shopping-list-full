@@ -10,7 +10,10 @@ import { addItemArray } from "../../store/reducers/itemsSlice";
 import { IShopItem } from "../../types";
 import { AddItem } from "./AddItem";
 import { ShopItem } from "./ShopItem";
-import { v4 } from 'uuid';
+import { v4 } from "uuid";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
+import "./stylesItems.css";
+
 export function ItemsList() {
   const dispatch = useAppDispatch();
   const { items } = useAppSelector((state) => state.itemsReducer);
@@ -31,15 +34,20 @@ export function ItemsList() {
   };
 
   useEffect(() => {
-    dispatch(fetchAllUsers())
+    dispatch(fetchAllUsers());
     dispatch(fetchAllSortedItems());
   }, []);
 
   return (
     <>
-      {items.map((el) => (
-        <ShopItem item={el} key={el.id} />
-      ))}
+      <TransitionGroup>
+        {items.map((el) => (
+          <CSSTransition key={el.id} timeout={500} classNames="item">
+            <ShopItem item={el} />
+          </CSSTransition>
+        ))}
+      </TransitionGroup>
+
       <AddItem onAdd={onAddItemHandler} />
     </>
   );

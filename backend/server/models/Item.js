@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const ItemSchema = new mongoose.Schema(
   {
     id: {
-        type: Number,
+        type: String,
         require: true,
       },
     completed: {
@@ -17,7 +17,7 @@ const ItemSchema = new mongoose.Schema(
     comments: [
       {
         idComment: {
-          type: Number,
+          type: String,
           require: true,
         },
         userId: {

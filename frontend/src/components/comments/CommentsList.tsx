@@ -4,6 +4,8 @@ import { IComment, IUser } from "../../types";
 import { CommentAdd } from "./CommentAdd";
 import { CommentItem } from "./CommentItem";
 import { v4 } from "uuid";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
+import "./stylesComment.css";
 
 interface CommentsListProps {
   comments?: IComment[];
@@ -30,7 +32,7 @@ export function CommentsList({
     onCommentsUpdate(allCommentsData);
   };
 
-  const commentDelHandle = (idComment: number) => {
+  const commentDelHandle = (idComment: string) => {
     const allCommentsData: IComment[] = structuredClone(comments);
     allCommentsData.map((el: IComment, index) => {
       if (el.idComment === idComment) {
@@ -80,20 +82,23 @@ export function CommentsList({
     const commentsUser = users.find((item: IUser) => item._id === el.userId);
     return commentsUser?.avatar;
   };
-
   return (
     <div className="w-full">
-      {comments?.map((el, index) => (
-        <CommentItem
-          comment={el}
-          userAvatar={userAvatarSearch(el)}
-          onCommentEdit={commentEditHandle}
-          onCommentDel={commentDelHandle}
-          onCommentAdd={commentAddVisible}
-          isAddIcon={index + 1 === comments?.length ? true : false}
-          key={el.idComment}
-        />
-      ))}
+      <TransitionGroup>
+        {comments?.map((el, index) => (
+          <CSSTransition key={el.idComment} timeout={500} classNames="comment">
+            <CommentItem
+              comment={el}
+              userAvatar={userAvatarSearch(el)}
+              onCommentEdit={commentEditHandle}
+              onCommentDel={commentDelHandle}
+              onCommentAdd={commentAddVisible}
+              isAddIcon={index + 1 === comments?.length ? true : false}
+              // key={el.idComment}
+            />
+          </CSSTransition>
+        ))}
+      </TransitionGroup>
 
       <CommentAdd
         onCommentAddValue={onCommentAddValueHandler}
@@ -102,3 +107,15 @@ export function CommentsList({
     </div>
   );
 }
+
+// classNames={{
+//   appear: "",
+//   appearActive: "",
+//   appearDone: "",
+//   enter: "opacity-0",
+//   enterActive: "opacity-100 transition-opacity ease-in delay-500 ",
+//   enterDone: "",
+//   exit: "opacity-100",
+//   exitActive: "opacity-100 transition-opacity ease-in delay-500 ",
+//   exitDone: "",
+// }}

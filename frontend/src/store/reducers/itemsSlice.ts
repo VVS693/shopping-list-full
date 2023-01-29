@@ -10,7 +10,7 @@ interface ItemsState {
 }
 
 const initialState: ItemsState = {
-  items: [{ id: 0, completed: false, title: "", comments: [] }],
+  items: [],
   isLoading: false,
   error: "",
   isShowComments: false,
