@@ -36,8 +36,8 @@ export function ShopItem({ item }: ShopItemProps) {
     // тут нужно только один уровеь копировать
     const itemData: IShopItem = {
       ...item,
-      completed: !item.completed
-    }
+      completed: !item.completed,
+    };
     dispatch(editItemArray(itemData));
     dispatch(fetchEditItems(itemData));
   };
@@ -53,7 +53,7 @@ export function ShopItem({ item }: ShopItemProps) {
     const itemData: IShopItem = structuredClone(item);
     itemData.comments = allCommentsData;
     if (allCommentsData.length === 0) {
-      setShowComments(false)
+      setShowComments(false);
     }
     dispatch(editItemArray(itemData));
     dispatch(fetchEditItems(itemData));
@@ -115,7 +115,6 @@ export function ShopItem({ item }: ShopItemProps) {
           onAddNewComment={addNewComment}
           onAddNewCommentCancel={() => {
             setAddNewComment(false);
-            setShowComments(false);
           }}
         />
       )}

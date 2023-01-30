@@ -13,7 +13,6 @@ interface CommentItemProps {
   onCommentDel: (idComment: string) => void;
   onCommentAdd: () => void;
   isAddIcon: boolean;
-  ref?: any
 }
 
 export function CommentItem({

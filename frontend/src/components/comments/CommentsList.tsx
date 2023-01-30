@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppSelector } from "../../hooks/redux";
 import { IComment, IUser } from "../../types";
 import { CommentAdd } from "./CommentAdd";
@@ -77,6 +77,8 @@ export function CommentsList({
   };
 
   const [isAddVisible, setIsAddVisible] = useState(onAddNewComment);
+
+  useEffect(() => setIsAddVisible(onAddNewComment), [onAddNewComment]);
 
   const userAvatarSearch = (el: IComment) => {
     const commentsUser = users.find((item: IUser) => item._id === el.userId);
