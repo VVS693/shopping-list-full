@@ -15,7 +15,8 @@ interface ClientToServerEvents {
 let socket: Socket<ServerToClientEvents, ClientToServerEvents>;
 
 export const initiateSocketConnection = () => {
-  socket = io("http://localhost:3001");
+  // socket = io("http://localhost:3001");
+  socket = io("https://sl.vvs693.ru");
   console.log(`Connecting socket...`);
   socket.on("connect", () => {});
 };

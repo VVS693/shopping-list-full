@@ -5,23 +5,20 @@ import path from "path";
 import multer from "multer";
 import mongoose from "mongoose";
 import cors from "cors";
-import * as UserController from "./controllers/UserController.js";
-import * as ItemController from "./controllers/ItemController.js";
-import * as MessageController from "./controllers/MessageController.js"
-import checkAuth from "./middlewares/checkAuth.js";
-import { MY_MONGO_DB } from "./config/config.js";
+import * as UserController from "./server/controllers/UserController.js";
+import * as ItemController from "./server/controllers/ItemController.js";
+import checkAuth from "./server/middlewares/checkAuth.js";
 import fs from "fs";
 import https from "https"
-
-import http from "http";
-import { Server } from "socket.io";
 
 const PORT = process.env.PORT || 3001;
 export const __dirname = path.resolve();
 
 mongoose.set("strictQuery", false);
 mongoose
-  .connect(MY_MONGO_DB)
+  .connect(
+    "mongodb+srv://vvs694:vvs694@cluster0.wqbcv20.mongodb.net/sl?retryWrites=true&w=majority"
+  )
   .then(() => console.log("ShoppingList database OK!"))
   .catch((err) => console.log("Database error", err));
 
@@ -44,41 +41,15 @@ const options = {
 
 app.use(express.json());
 
+// const corsOptions = {
+//   origin: "http://localhost:3000",
+// };
+// app.use(cors(corsOptions));
+
 app.use(cors());
 
-const server = https.createServer(options, app);
-const io = new Server(server, {
-  cors: {
-    origin: "https://localhost:3000",
-    methods: ["GET", "POST"],
-  },
-});
-
-let usersOnline = [];
-
-io.on("connection", (socket) => {
-  console.log(`User connected on socket: ${socket.id}`);
-
-  socket.on("disconnect", () => {
-    console.log("User disconnected ");
-    usersOnline = usersOnline.filter((el) => el.socketId !== socket.id)
-    io.emit("newUserResponse", usersOnline);
-  });
-
-  socket.on("message", (data) => {
-    io.emit("messageResponse", data);
-    MessageController.createMessage(data)
-  });
-
-  socket.on("newUser", (data) => {
-    if (!usersOnline.find(el => el.userId === data.userId)) {
-      usersOnline.push(data);
-    }
-    io.emit("newUserResponse", usersOnline);
-  });
-
-  // We can write our socket event listeners in here...
-});
+console.log(path.resolve(__dirname, "avatars"));
+console.log(path.resolve(__dirname, "../frontend/build"));
 
 app.use(express.static(path.resolve(__dirname, "avatars")));
 app.use(express.static(path.resolve(__dirname, "avatars/default")));
@@ -107,21 +78,14 @@ app.post("/items", checkAuth, ItemController.createItem);
 app.delete("/items/:id", checkAuth, ItemController.removeItem);
 app.patch("/items/:id", checkAuth, ItemController.updateItem);
 
-app.get("/messages", checkAuth, MessageController.getAllMessages);
-
-
 app.get("/*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "../../frontend/build", "index.html"));
-});
-
-server.listen(PORT, () => {
-  console.log(`Server listening on ${PORT}`);
 });
 
 // app.listen(PORT, () => {
 //   console.log(`Server listening on ${PORT}`);
 // });
 
-// https.createServer(options, app).listen(PORT, () => {
-//   console.log(`Server listening on ${PORT}`);
-// });
+https.createServer(options, app).listen(PORT, () => {
+  console.log(`Server listening on ${PORT}`);
+});

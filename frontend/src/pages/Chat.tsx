@@ -42,16 +42,15 @@ export function Chat() {
 
   useEffect(() => {
     if (isAuth) {
-      console.log("effect all")
+      console.log("effect all");
       dispatch(fetchUserMe());
       dispatch(fetchAllUsers());
-      dispatch(fetchAllMessages())
+      dispatch(fetchAllMessages());
       initiateSocketConnection();
       newUser(user._id);
       messageResponse((data: IMessage) => {
         dispatch(addMessage(data));
       });
-
     }
     return () => {
       disconnectSocket();
@@ -59,11 +58,11 @@ export function Chat() {
   }, [isAuth]);
 
   useEffect(() => {
-    console.log("user online effect")
+    console.log("user online effect");
     usersOnlineResponse((data: IUsersOnline[]) => {
       dispatch(setUsersOnline(data));
     });
-  }, [] )
+  }, []);
 
   const sendMessageHadle = (text: string) => {
     const messageData: IMessage = {

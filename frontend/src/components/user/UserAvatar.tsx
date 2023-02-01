@@ -1,7 +1,7 @@
 import { styled } from "@mui/material/styles";
 import Badge from "@mui/material/Badge";
 import Avatar from "@mui/material/Avatar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface UserAvatarProps {
   userAvatar?: string;
@@ -46,6 +46,10 @@ export function UserAvatar({
   height,
 }: UserAvatarProps) {
   const [currentUserAvatar, setCurrentUserAvatar] = useState(userAvatar);
+
+  useEffect(() => {
+    setCurrentUserAvatar(userAvatar);
+  }, [userAvatar]);
 
   return (
     <StyledBadge
