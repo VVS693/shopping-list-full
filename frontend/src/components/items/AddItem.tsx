@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { CheckBox } from "./Checkbox";
 
 interface AddItemProps {
@@ -23,6 +23,8 @@ export function AddItem({ onAdd }: AddItemProps) {
     setValue("");
   };
 
+  const inputRef = useRef<any>()
+
   return (
     <>
       {!isAddFormVisible ? (
@@ -39,7 +41,9 @@ export function AddItem({ onAdd }: AddItemProps) {
           <div className="w-full py-1 mb-0 bg-white relative">
             <form onSubmit={submitHandler}>
               <input
+                ref={inputRef}
                 type="text"
+                style={{ width: inputRef.current ? inputRef.current.value.length + 'ch' : 'auto' }}
                 placeholder="Add element..."
                 className="w-full ml-2 p-2 text-xl select-text outline-none"
                 onBlur={submitHandler}

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IUser } from "../../types";
+import { IUser, IUsersOnline } from "../../types";
 import {
   fetchAllUsers,
   fetchUserLogin,
@@ -11,7 +11,8 @@ import {
 
 interface UserState {
   user: IUser;
-  users: IUser[]
+  users: IUser[];
+  usersOnline: IUsersOnline[];
   isLoading: boolean;
   error: string;
   isAuth: boolean;
@@ -20,8 +21,9 @@ interface UserState {
 }
 
 const initialState: UserState = {
-  user: { _id: "", name: "", avatar: "" },
+  user: { _id: "", name: "", avatar: " " },
   users: [],
+  usersOnline: [],
   isLoading: false,
   error: "",
   isAuth: false,
@@ -38,6 +40,9 @@ export const usersSlice = createSlice({
     },
     authReset(state) {
       state.isAuth = false;
+    },
+    setUsersOnline(state, action: PayloadAction<IUsersOnline[]>) {
+      state.usersOnline = action.payload;
     },
   },
 
@@ -128,6 +133,7 @@ export const usersSlice = createSlice({
   },
 });
 
-export const { defaultAvatarImage, authReset } = usersSlice.actions;
+export const { defaultAvatarImage, authReset, setUsersOnline } =
+  usersSlice.actions;
 
 export default usersSlice.reducer;

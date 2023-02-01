@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { IComment } from "../../types";
 import { CommentEdit } from "./CommentEdit";
 import { Commentitle } from "./CommentTitle";
 import AddCommentOutlinedIcon from "@mui/icons-material/AddCommentOutlined";
-import Avatar from "@mui/material/Avatar";
 import { useAppSelector } from "../../hooks/redux";
+import { UserAvatar } from "../user/UserAvatar";
 
 interface CommentItemProps {
   comment?: IComment;
@@ -43,8 +43,13 @@ export function CommentItem({
   return (
     <div className="flex flex-col items-start">
       <div className="flex items-center w-full">
-        <div className=" pb-1 ml-3">
-          <Avatar src={userAvatar} sx={{ width: 24, height: 24 }} />
+        <div className=" pb-1 pt-1 ml-3">
+          <UserAvatar
+            isUserActive={false}
+            userAvatar={userAvatar}
+            width={26}
+            height={26}
+          />
         </div>
         {edit ? (
           <CommentEdit

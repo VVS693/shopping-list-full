@@ -55,3 +55,15 @@ export interface IUserNewPassword {
   currentPassword: string;
   newPassword: string;
 }
+
+export interface IMessage {
+  id: string;
+  text: string;
+  userId: string
+  creationTime?: string
+}
+
+export interface IUsersOnline {
+  userId: string;
+  socketId: string
+}

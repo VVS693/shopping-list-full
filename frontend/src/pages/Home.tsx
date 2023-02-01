@@ -7,10 +7,12 @@ import { animateScroll } from "react-scroll";
 import { FooterMenu } from "../components/FooterMenu";
 import { ItemsList } from "../components/items/ItemsList";
 import { fetchAllUsers } from "../store/reducers/actionUserCreators";
+import { useNavigate } from "react-router-dom";
 
 export function Home() {
   const dispatch = useAppDispatch();
   const { isLoading, error } = useAppSelector((state) => state.itemsReducer);
+  const navigate = useNavigate();
 
   const onSortHandler = () => {
     animateScroll.scrollToTop({
@@ -31,10 +33,11 @@ export function Home() {
       {error ? (
         <ErrorMessage error={error} />
       ) : (
-        <Header isLoading={isLoading} />
+        <Header isLoading={isLoading} title="Shopping List"/>
       )}
       <ItemsList />
       <FooterMenu
+        onChatClick={() => navigate("/chat")}
         onSortClick={onSortHandler}
         onShowCommentsClick={onShowAllCommentsHandler}
       />

@@ -5,9 +5,9 @@ import path from "path";
 import multer from "multer";
 import mongoose from "mongoose";
 import cors from "cors";
-import * as UserController from "./controllers/UserController.js";
-import * as ItemController from "./controllers/ItemController.js";
-import checkAuth from "./middlewares/checkAuth.js";
+import * as UserController from "../controllers/UserController.js";
+import * as ItemController from "../controllers/ItemController.js";
+import checkAuth from "../middlewares/checkAuth.js";
 // import fs from "fs";
 // import https from "https"
 

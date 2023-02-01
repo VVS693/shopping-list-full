@@ -16,7 +16,7 @@ export function SlAvatarEditor({
   const { user } = useAppSelector((state) => state.userReducer);
   const [zoomValue, setZoomValue] = useState<number | number[]>(20);
   const [rotatuonValue, setRotationValue] = useState<number | number[]>(0);
-  const [newImage, setNewImage] = useState<string | File >(user.avatar);
+  const [newImage, setNewImage] = useState<string | File>(user.avatar);
 
   const editor = useRef<AvatarEditor>(null);
 
@@ -62,6 +62,7 @@ export function SlAvatarEditor({
         <AvatarEditor
           ref={editor}
           image={newImage}
+          onLoadFailure={() => setNewImage("default_ava.png")}
           width={260}
           height={260}
           borderRadius={130}

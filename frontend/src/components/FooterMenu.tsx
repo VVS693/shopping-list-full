@@ -1,11 +1,13 @@
 import { Button } from "@material-tailwind/react";
 
 interface FooterMenuProps {
+  onChatClick?: () => void
   onSortClick?: () => void;
   onShowCommentsClick?: () => void;
 }
 
 export function FooterMenu({
+  onChatClick,
   onSortClick,
   onShowCommentsClick,
 }: FooterMenuProps) {
@@ -14,7 +16,16 @@ export function FooterMenu({
       <Button
         size="sm"
         variant="outlined"
-        className="w-32 tracking-wider mx-4 text-blue-gray-800 border-blue-gray-800 focus:ring-blue-gray-300"
+        className="w-24 tracking-wider mr-2 text-blue-gray-800 border-blue-gray-800 focus:ring-blue-gray-300"
+        onClick={onChatClick}
+      >
+        Chat
+      </Button>
+
+      <Button
+        size="sm"
+        variant="outlined"
+        className="w-32 tracking-wider mx-2 text-blue-gray-800 border-blue-gray-800 focus:ring-blue-gray-300"
         onClick={onShowCommentsClick}
       >
         Comments
@@ -22,7 +33,7 @@ export function FooterMenu({
       <Button
         size="sm"
         variant="outlined"
-        className="w-32 tracking-wider mx-4 text-blue-gray-800 border-blue-gray-800 focus:ring-blue-gray-300"
+        className="w-24 tracking-wider ml-2 text-blue-gray-800 border-blue-gray-800 focus:ring-blue-gray-300"
         onClick={onSortClick}
       >
         Sort

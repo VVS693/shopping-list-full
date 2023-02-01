@@ -1,11 +1,10 @@
 import { Button, Input } from "@material-tailwind/react";
-import Avatar from "@mui/material/Avatar";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { SlAvatarEditor } from "../components/user/SlAvatarEditor";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
-import { authReset, defaultAvatarImage } from "../store/reducers/usersSlice";
+import { authReset } from "../store/reducers/usersSlice";
 import { eyeIcon, eyeSlashIcon } from "../components/icons";
 import {
   delOldUserAvatar,
@@ -15,6 +14,7 @@ import {
   fetchUserUpdateName,
 } from "../store/reducers/actionUserCreators";
 import { AlertDialog } from "../components/AlertDialog";
+import { UserAvatar } from "../components/user/UserAvatar";
 
 interface IAccountInput {
   newUserName: string;
@@ -177,28 +177,21 @@ export function UserAccount() {
       <div className="text-center">
         {!editAvatar ? (
           <div className="flex flex-col items-center ">
-            <Avatar
-              src={user.avatar}
-              sx={{
-                cursor: editAccount ? "pointer" : "",
-                width: 240,
-                height: 240,
-                mb: 2,
-                mt: 2,
-              }}
-              onError={() => {
-                dispatch(
-                  defaultAvatarImage({
-                    avatar: "default_ava.png",
-                  })
-                );
-              }}
+            <div
+              className={editAccount ? "cursor-pointer mb-2 mt-1" : "mb-2 mt-1"}
               onClick={() => {
                 if (editAccount) {
                   setEditAvatar(true);
                 }
               }}
-            />
+            >
+              <UserAvatar
+                isUserActive={false}
+                userAvatar={user.avatar}
+                width={312}
+                height={312}
+              />
+            </div>
 
             <h2 className="pt-3 pb-3 text-center text-3xl font-medium text-gray-900">
               {user.name}
